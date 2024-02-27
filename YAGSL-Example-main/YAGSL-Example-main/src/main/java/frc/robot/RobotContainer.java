@@ -96,7 +96,7 @@ public class RobotContainer
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> driverXbox.getRawAxis(2));
 
-    Command launchGamepiece = launcher.LaunchGamepieceCommand(launcher);
+    Command launchGamepiece = launcher.launch();
 
 
     // drivebase.setDefaultCommand(
