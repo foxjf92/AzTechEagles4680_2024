@@ -1,7 +1,7 @@
 {
   "location": {
-    "front": 0,
-    "left": 0
+    "front": -11.75,
+    "left": -10.75
   },
   "absoluteEncoderOffset": 0,
   "drive": {
@@ -12,7 +12,7 @@
   "angle": {
     "type": "sparkmax",
     "id": 5,
-    "canbus": null
+    "canbus": "rio"
   },
   "conversionFactor": {
     "angle": 0,

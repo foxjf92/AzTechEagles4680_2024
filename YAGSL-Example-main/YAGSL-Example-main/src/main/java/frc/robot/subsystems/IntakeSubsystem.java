@@ -14,18 +14,8 @@ public class IntakeSubsystem extends SubsystemBase{
         intakeMotor2 = new CANSparkMax(11, CANSparkLowLevel.MotorType.kBrushless);
     }
 
-    public void intakeGamepiece(){
-        intakeMotor1.set(0);
-        intakeMotor2.set(0);
-    }
-
-    public void scoreAmp(){
-        intakeMotor1.set(0);
-        intakeMotor2.set(0);
-    }
-
-    public void insertGamePiece(){
-        intakeMotor1.set(0);
-        intakeMotor2.set(0);
+    public void spinIntake(double speed){
+        intakeMotor1.set(speed);
+        intakeMotor2.set(speed);
     }
 }

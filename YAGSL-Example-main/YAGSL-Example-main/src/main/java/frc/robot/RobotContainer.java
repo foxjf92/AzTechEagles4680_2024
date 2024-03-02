@@ -20,7 +20,11 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.LaunchGamepieceCommand;
+import frc.robot.commands.MoveArmCommand;
+import frc.robot.commands.SpinIntakeCommand;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LauncherSubsystem;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -38,26 +42,30 @@ public class RobotContainer
                                                                          "swerve/neo"));
 
   private final LauncherSubsystem launcher = new LauncherSubsystem();
-  // private final IntakeSubstystem intake = new IntakeSubstystem();
-  // private final IntakeArmSubsystem intakeArm = new IntakeArmSubsystem();
-  // private final LauncherSubsystem launcher = new LauncherSubsystem();
+  private final IntakeSubsystem intake = new IntakeSubsystem();
+  private final ArmSubsystem arm = new ArmSubsystem();
                                                                         
-  // CommandJoystick rotationController = new CommandJoystick(1);
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  CommandJoystick driverController = new CommandJoystick(1);
-
-  // CommandJoystick driverController   = new CommandJoystick(3);//(OperatorConstants.DRIVER_CONTROLLER_PORT);
+  //CommandJoystick driverController = new CommandJoystick(1);
   XboxController driverXbox = new XboxController(0);
   CommandXboxController operatorXbox = new CommandXboxController(1);
+
+  Command armIntake;
+  Command armAmp;
+    Command armLaunch;
+
+    Command intakeCollect;
+    Command intakeAmp;
+    Command intakeLaunch;
+    
+    Command launchGamepiece;
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer()
   {
-    // Configure the trigger bindings
-    configureBindings();
-
+    
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
                                                                    () -> MathUtil.applyDeadband(driverXbox.getLeftY(),
                                                                                                 OperatorConstants.LEFT_Y_DEADBAND),
@@ -96,8 +104,18 @@ public class RobotContainer
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> driverXbox.getRawAxis(2));
 
-    Command launchGamepiece = launcher.launch();
+    armIntake = new MoveArmCommand(arm, 1);
+     armAmp = new MoveArmCommand(arm, 2);
+     armLaunch = new MoveArmCommand(arm, 3);
 
+     intakeCollect = new SpinIntakeCommand(intake, 0.1);
+     intakeAmp = new SpinIntakeCommand(intake, -0.1);
+     intakeLaunch = new SpinIntakeCommand(intake, 0.1);
+    
+     launchGamepiece = new LaunchGamepieceCommand(launcher, 0.5);
+
+    // Configure the trigger bindings
+    configureBindings();
 
     // drivebase.setDefaultCommand(
     //     !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
@@ -123,7 +141,14 @@ public class RobotContainer
                               ));
 //    new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
 
-    operatorXbox.a(null).whileTrue(LaunchGamepiece);
+    operatorXbox.a().onTrue(armIntake);
+    operatorXbox.x().onTrue(armAmp);
+    operatorXbox.y().onTrue(armLaunch);
+    operatorXbox.rightTrigger().onTrue(intakeCollect);
+    operatorXbox.leftTrigger().onTrue(intakeAmp);
+    operatorXbox.rightBumper().onTrue(intakeLaunch.alongWith(launchGamepiece));
+    
+
   }
 
   /**
