@@ -16,15 +16,16 @@ public class ArmSubsystem extends SubsystemBase {
     public double armspeed; 
     public RelativeEncoder armEncoder;
 
-    public final double kP = 0.0; // TODO - Tune this second
-    public final double kI = 0.0; // TODO - Tune this fourth
-    public final double kD = 0.0; // TODO - Tune this third
-    public final double arbFF = 0.0; //TODO - Tune this first
+    // public final double kP = 0.0; // TODO - Tune this second
+    // public final double kI = 0.0; // TODO - Tune this fourth
+    // public final double kD = 0.0; // TODO - Tune this third
+    // public final double arbFF = 0.0; //TODO - Tune this first
  
     public double setpoint = 1;
     public double errorSum = 0;
     public double lastTimestamp = 0;
     public double lastError = 0;
+    public double test = 6.5;
 
     private float kUpperLimitArmMotor = 3;   //TODO confirm which was is up or down and set
     private float kLowerLimitArmMotor = 0;  //TODO confirm which way is up or down and set
@@ -44,7 +45,9 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic(){
-        SmartDashboard.putNumber("elevator encoder: ", armEncoder.getPosition());
+        SmartDashboard.putString("Test", "chickendog");
+        SmartDashboard.putNumber("arm encoder: ", armEncoder.getPosition());
+        SmartDashboard.putNumber("Test", 6.5);
     }
 
     public void moveArm(double armspeed) {

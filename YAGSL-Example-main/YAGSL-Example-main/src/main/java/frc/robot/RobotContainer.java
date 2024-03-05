@@ -53,9 +53,10 @@ public class RobotContainer
   // Command armAmp = new MoveArmCommand(arm, 2);
   // Command armLaunch = new MoveArmCommand(arm, 3);
 
+  Command intakeStill = new SpinIntakeCommand(intake, 0);
   Command intakeCollect = new SpinIntakeCommand(intake, 0.5);
   Command intakeAmp = new SpinIntakeCommand(intake, -0.5);
-  Command intakeLaunch = new SpinIntakeCommand(intake, 0.5);
+  Command intakeLaunch = new SpinIntakeCommand(intake, 1.0);
     
   //Command launchGamepiece = new LaunchGamepieceCommand(launcher, 0.5);
 
@@ -134,8 +135,8 @@ public class RobotContainer
     //operatorXbox.a().onTrue(armIntake);
     //operatorXbox.x().onTrue(armAmp);
     //operatorXbox.y().onTrue(armLaunch);
-    operatorXbox.rightTrigger().whileTrue(intakeCollect);
-    operatorXbox.leftTrigger().whileTrue(intakeAmp);
+    operatorXbox.rightTrigger().whileTrue(intakeCollect).onFalse(intakeStill);
+    operatorXbox.leftTrigger().whileTrue(intakeAmp).onFalse(intakeStill);
     //operatorXbox.rightBumper().onTrue(intakeLaunch.alongWith(launchGamepiece));
     
 
