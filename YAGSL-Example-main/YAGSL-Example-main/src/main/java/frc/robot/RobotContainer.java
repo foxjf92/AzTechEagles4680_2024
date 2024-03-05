@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.LaunchGamepieceCommand;
-import frc.robot.commands.MoveArmCommand;
+//import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.SpinIntakeCommand;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.ArmSubsystem;
@@ -39,7 +39,7 @@ public class RobotContainer
 
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                         "swerve/neo"));
+                                                                        "swerve/neo"));
 
   private final LauncherSubsystem launcher = new LauncherSubsystem();
   private final IntakeSubsystem intake = new IntakeSubsystem();
@@ -49,15 +49,15 @@ public class RobotContainer
   XboxController driverXbox = new XboxController(0);
   CommandXboxController operatorXbox = new CommandXboxController(1);
 
-  Command armIntake;
-  Command armAmp;
-    Command armLaunch;
+  // Command armIntake = new MoveArmCommand(arm, 1);
+  // Command armAmp = new MoveArmCommand(arm, 2);
+  // Command armLaunch = new MoveArmCommand(arm, 3);
 
-    Command intakeCollect;
-    Command intakeAmp;
-    Command intakeLaunch;
+  Command intakeCollect = new SpinIntakeCommand(intake, 0.5);
+  Command intakeAmp = new SpinIntakeCommand(intake, -0.5);
+  Command intakeLaunch = new SpinIntakeCommand(intake, 0.5);
     
-    Command launchGamepiece;
+  //Command launchGamepiece = new LaunchGamepieceCommand(launcher, 0.5);
 
 
   /**
@@ -104,21 +104,11 @@ public class RobotContainer
         () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
         () -> driverXbox.getRawAxis(2));
 
-    armIntake = new MoveArmCommand(arm, 1);
-     armAmp = new MoveArmCommand(arm, 2);
-     armLaunch = new MoveArmCommand(arm, 3);
-
-     intakeCollect = new SpinIntakeCommand(intake, 0.1);
-     intakeAmp = new SpinIntakeCommand(intake, -0.1);
-     intakeLaunch = new SpinIntakeCommand(intake, 0.1);
-    
-     launchGamepiece = new LaunchGamepieceCommand(launcher, 0.5);
-
     // Configure the trigger bindings
     configureBindings();
 
-    // drivebase.setDefaultCommand(
-    //     !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
+    drivebase.setDefaultCommand(
+        !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
   }
 
   /**
@@ -139,14 +129,14 @@ public class RobotContainer
         Commands.deferredProxy(() -> drivebase.driveToPose(
                                    new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
                               ));
-//    new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
+  //  new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
 
-    operatorXbox.a().onTrue(armIntake);
-    operatorXbox.x().onTrue(armAmp);
-    operatorXbox.y().onTrue(armLaunch);
-    operatorXbox.rightTrigger().onTrue(intakeCollect);
-    operatorXbox.leftTrigger().onTrue(intakeAmp);
-    operatorXbox.rightBumper().onTrue(intakeLaunch.alongWith(launchGamepiece));
+    //operatorXbox.a().onTrue(armIntake);
+    //operatorXbox.x().onTrue(armAmp);
+    //operatorXbox.y().onTrue(armLaunch);
+    operatorXbox.rightTrigger().whileTrue(intakeCollect);
+    operatorXbox.leftTrigger().whileTrue(intakeAmp);
+    //operatorXbox.rightBumper().onTrue(intakeLaunch.alongWith(launchGamepiece));
     
 
   }
@@ -169,6 +159,6 @@ public class RobotContainer
 
   public void setMotorBrake(boolean brake)
   {
-    drivebase.setMotorBrake(brake);
+    //drivebase.setMotorBrake(brake);
   }
 }
