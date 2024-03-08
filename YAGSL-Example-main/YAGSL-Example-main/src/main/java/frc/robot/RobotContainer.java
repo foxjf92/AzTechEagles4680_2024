@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -56,9 +57,11 @@ public class RobotContainer
   Command intakeStill = new SpinIntakeCommand(intake, 0);
   Command intakeCollect = new SpinIntakeCommand(intake, 0.5);
   Command intakeAmp = new SpinIntakeCommand(intake, -0.5);
-  Command intakeLaunch = new SpinIntakeCommand(intake, 1.0);
+  Command intakeLaunch = new SpinIntakeCommand(intake, -1.0);
+
+  WaitCommand launchDelay = new WaitCommand(0.5);
     
-  //Command launchGamepiece = new LaunchGamepieceCommand(launcher, 0.5);
+  Command launchGamepiece = new LaunchGamepieceCommand(launcher, -0.5);
 
 
   /**
@@ -137,7 +140,9 @@ public class RobotContainer
     //operatorXbox.y().onTrue(armLaunch);
     operatorXbox.rightTrigger().whileTrue(intakeCollect).onFalse(intakeStill);
     operatorXbox.leftTrigger().whileTrue(intakeAmp).onFalse(intakeStill);
-    //operatorXbox.rightBumper().onTrue(intakeLaunch.alongWith(launchGamepiece));
+    //operatorXbox.rightBumper().onTrue(launchGamepiece);
+    //operatorXbox.rightBumper().onTrue(wait(500).andThen(intakeLaunch));
+    operatorXbox.rightBumper().onTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
     
 
   }
