@@ -9,13 +9,13 @@ import frc.robot.subsystems.ArmSubsystem;
 public class MoveArmCommand extends Command{
     private final ArmSubsystem m_arm;
     public static double armSetpoint; 
-    private Timer timer = new Timer();
+    //private Timer timer = new Timer();
     private int position; //Symbolic elevator position where 1 = ground intake, 2 = amp position, 3 = launch position
     
-    public final double kP = 0.0025; // TODO - Tune this second
-    public final double kI = 0.0001; // TODO - Tune this fourth
-    public final double kD = 0.0001; // TODO - Tune this third
-    public final double arbFF = 0.006; //TODO - Tune this first
+    public final double kP = 0.05; // TODO - Tune this second
+    public final double kI = 0.0; // TODO - Tune this fourth
+    public final double kD = 0.005; // TODO - Tune this third
+    public final double arbFF = 0.0007; //TODO - Tune this first
 
     private PIDController m_armPID = new PIDController(kP,kI,kD);
 
@@ -31,13 +31,13 @@ public class MoveArmCommand extends Command{
 
         // Arm Setpoints - 1 = ground intake, 2 = amp, 3 = launch position
         if (position == 1) {
-            armSetpoint = 6.0; // TODO Encoder Value for ground intake
+            armSetpoint = 3.0; // TODO Encoder Value for ground intake
         }
         if (position == 2) {
-            armSetpoint = 50; // TODO Encoder value for amp score
+            armSetpoint = 25.0; // TODO Encoder value for amp score
         }
         if (position == 3) {
-            armSetpoint = 88; // TODO encoder value for launch
+            armSetpoint = 56.0; // TODO encoder value for launch
         }
 
     }

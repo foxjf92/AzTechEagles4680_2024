@@ -7,12 +7,12 @@
   "drive": {
     "type": "sparkmax",
     "id": 8,
-    "canbus": "rio"
+    "canbus": "null"
   },
   "angle": {
     "type": "sparkmax",
     "id": 7,
-    "canbus": "rio"
+    "canbus": "null"
   },
   "conversionFactor": {
     "angle": 28.125,

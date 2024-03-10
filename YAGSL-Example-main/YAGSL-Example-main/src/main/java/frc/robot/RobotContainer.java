@@ -44,24 +44,24 @@ public class RobotContainer
 
   private final LauncherSubsystem launcher = new LauncherSubsystem();
   private final IntakeSubsystem intake = new IntakeSubsystem();
-  //private final ArmSubsystem arm = new ArmSubsystem();
+  private final ArmSubsystem arm = new ArmSubsystem();
                                                                         
   //CommandJoystick driverController = new CommandJoystick(1);
   XboxController driverXbox = new XboxController(0);
   CommandXboxController operatorXbox = new CommandXboxController(1);
 
-  // Command armIntake = new MoveArmCommand(arm, 1);
-  // Command armAmp = new MoveArmCommand(arm, 2);
-  // Command armLaunch = new MoveArmCommand(arm, 3);
+  Command armIntake = new MoveArmCommand(arm, 1);
+  Command armAmp = new MoveArmCommand(arm, 2);
+  Command armLaunch = new MoveArmCommand(arm, 3);
 
   Command intakeStill = new SpinIntakeCommand(intake, 0);
   Command intakeCollect = new SpinIntakeCommand(intake, -0.5);
   Command intakeAmp = new SpinIntakeCommand(intake, 0.5);
-  Command intakeLaunch = new SpinIntakeCommand(intake, -0.5);
+  Command intakeLaunch = new SpinIntakeCommand(intake, -1.0);
 
   WaitCommand launchDelay = new WaitCommand(0.5);
     
-  Command launchGamepiece = new LaunchGamepieceCommand(launcher, -0.5);
+  Command launchGamepiece = new LaunchGamepieceCommand(launcher, -1.0);
   Command launchStill = new LaunchGamepieceCommand(launcher, 0);
 
   /**
@@ -82,26 +82,26 @@ public class RobotContainer
                                                                    driverXbox::getXButtonPressed,
                                                                    driverXbox::getBButtonPressed);
 
-    // // Applies deadbands and inverts controls because joysticks
-    // // are back-right positive while robot
-    // // controls are front-left positive
-    // // left stick controls translation
-    // // right stick controls the desired angle NOT angular rotation
-    // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-    //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-    //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-    //     () -> driverXbox.getRightX(),
-    //     () -> driverXbox.getRightY());
+    // Applies deadbands and inverts controls because joysticks
+    // are back-right positive while robot
+    // controls are front-left positive
+    // left stick controls translation
+    // right stick controls the desired angle NOT angular rotation
+    Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
+        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> driverXbox.getRightX(),
+        () -> driverXbox.getRightY());
 
-    // // Applies deadbands and inverts controls because joysticks
-    // // are back-right positive while robot
-    // // controls are front-left positive
-    // // left stick controls translation
-    // // right stick controls the angular velocity of the robot
-    // Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-    //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-    //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-    //     () -> driverXbox.getRawAxis(2));
+    // Applies deadbands and inverts controls because joysticks
+    // are back-right positive while robot
+    // controls are front-left positive
+    // left stick controls translation
+    // right stick controls the angular velocity of the robot
+    Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
+        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> driverXbox.getRawAxis(2));
 
     Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -114,7 +114,7 @@ public class RobotContainer
     drivebase.setDefaultCommand(
         !RobotBase.isSimulation() ? closedAbsoluteDriveAdv : driveFieldOrientedDirectAngleSim);
 
-    // arm.setDefaultCommand(armAmp);
+    arm.setDefaultCommand(armAmp);
     intake.setDefaultCommand(intakeStill);
     launcher.setDefaultCommand(launchStill);
 
@@ -132,7 +132,7 @@ public class RobotContainer
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
     new JoystickButton(driverXbox, 6).onTrue((new InstantCommand(drivebase::zeroGyro)));
-    new JoystickButton(driverXbox, 5).onTrue(new InstantCommand(drivebase::addFakeVisionReading));
+    // new JoystickButton(driverXbox, 5).onTrue(new InstantCommand(drivebase::addFakeVisionReading));
     // new JoystickButton(driverXbox,
     //                    2).whileTrue(
     //     Commands.deferredProxy(() -> drivebase.driveToPose(
@@ -140,9 +140,9 @@ public class RobotContainer
     //                           ));
   //  new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
 
-    // operatorXbox.a().onTrue(armIntake);
-    // operatorXbox.x().onTrue(armAmp);
-    // operatorXbox.y().onTrue(armLaunch);
+    operatorXbox.a().onTrue(armIntake);
+    operatorXbox.x().onTrue(armAmp);
+    operatorXbox.y().onTrue(armLaunch);
     operatorXbox.leftBumper().whileTrue(intakeCollect);
     operatorXbox.rightBumper().whileTrue(intakeAmp);
     operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
@@ -157,7 +157,8 @@ public class RobotContainer
   public Command getAutonomousCommand()
   {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("New Auto");
+    //return drivebase.getAutonomousCommand("New Auto");
+    return null;
   }
 
   public void setDriveMode()
