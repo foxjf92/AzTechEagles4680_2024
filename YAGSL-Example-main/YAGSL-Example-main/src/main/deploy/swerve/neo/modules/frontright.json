@@ -15,8 +15,8 @@
     "canbus": "rio"
   },
   "conversionFactor": {
-    "angle": 0,
-    "drive": 0
+    "angle": 28.125,
+    "drive": 0.047286787200699704
   },
   "encoder": {
     "type": "thrifty",

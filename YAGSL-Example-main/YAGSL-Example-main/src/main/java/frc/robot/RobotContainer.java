@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.LaunchGamepieceCommand;
-//import frc.robot.commands.MoveArmCommand;
+import frc.robot.commands.MoveArmCommand;
 import frc.robot.commands.SpinIntakeCommand;
 import frc.robot.commands.swervedrive.drivebase.AbsoluteDriveAdv;
 import frc.robot.subsystems.ArmSubsystem;
@@ -44,7 +44,7 @@ public class RobotContainer
 
   private final LauncherSubsystem launcher = new LauncherSubsystem();
   private final IntakeSubsystem intake = new IntakeSubsystem();
-  private final ArmSubsystem arm = new ArmSubsystem();
+  //private final ArmSubsystem arm = new ArmSubsystem();
                                                                         
   //CommandJoystick driverController = new CommandJoystick(1);
   XboxController driverXbox = new XboxController(0);
@@ -55,14 +55,14 @@ public class RobotContainer
   // Command armLaunch = new MoveArmCommand(arm, 3);
 
   Command intakeStill = new SpinIntakeCommand(intake, 0);
-  Command intakeCollect = new SpinIntakeCommand(intake, 0.5);
-  Command intakeAmp = new SpinIntakeCommand(intake, -0.5);
-  Command intakeLaunch = new SpinIntakeCommand(intake, -1.0);
+  Command intakeCollect = new SpinIntakeCommand(intake, -0.5);
+  Command intakeAmp = new SpinIntakeCommand(intake, 0.5);
+  Command intakeLaunch = new SpinIntakeCommand(intake, -0.5);
 
   WaitCommand launchDelay = new WaitCommand(0.5);
     
   Command launchGamepiece = new LaunchGamepieceCommand(launcher, -0.5);
-
+  Command launchStill = new LaunchGamepieceCommand(launcher, 0);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -82,26 +82,26 @@ public class RobotContainer
                                                                    driverXbox::getXButtonPressed,
                                                                    driverXbox::getBButtonPressed);
 
-    // Applies deadbands and inverts controls because joysticks
-    // are back-right positive while robot
-    // controls are front-left positive
-    // left stick controls translation
-    // right stick controls the desired angle NOT angular rotation
-    Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRightX(),
-        () -> driverXbox.getRightY());
+    // // Applies deadbands and inverts controls because joysticks
+    // // are back-right positive while robot
+    // // controls are front-left positive
+    // // left stick controls translation
+    // // right stick controls the desired angle NOT angular rotation
+    // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
+    //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+    //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+    //     () -> driverXbox.getRightX(),
+    //     () -> driverXbox.getRightY());
 
-    // Applies deadbands and inverts controls because joysticks
-    // are back-right positive while robot
-    // controls are front-left positive
-    // left stick controls translation
-    // right stick controls the angular velocity of the robot
-    Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRawAxis(2));
+    // // Applies deadbands and inverts controls because joysticks
+    // // are back-right positive while robot
+    // // controls are front-left positive
+    // // left stick controls translation
+    // // right stick controls the angular velocity of the robot
+    // Command driveFieldOrientedAnglularVelocity = drivebase.driveCommand(
+    //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+    //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+    //     () -> driverXbox.getRawAxis(2));
 
     Command driveFieldOrientedDirectAngleSim = drivebase.simDriveCommand(
         () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -112,7 +112,12 @@ public class RobotContainer
     configureBindings();
 
     drivebase.setDefaultCommand(
-        !RobotBase.isSimulation() ? driveFieldOrientedDirectAngle : driveFieldOrientedDirectAngleSim);
+        !RobotBase.isSimulation() ? closedAbsoluteDriveAdv : driveFieldOrientedDirectAngleSim);
+
+    // arm.setDefaultCommand(armAmp);
+    intake.setDefaultCommand(intakeStill);
+    launcher.setDefaultCommand(launchStill);
+
   }
 
   /**
@@ -126,24 +131,21 @@ public class RobotContainer
   {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
 
-    new JoystickButton(driverXbox, 1).onTrue((new InstantCommand(drivebase::zeroGyro)));
-    new JoystickButton(driverXbox, 3).onTrue(new InstantCommand(drivebase::addFakeVisionReading));
-    new JoystickButton(driverXbox,
-                       2).whileTrue(
-        Commands.deferredProxy(() -> drivebase.driveToPose(
-                                   new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-                              ));
+    new JoystickButton(driverXbox, 6).onTrue((new InstantCommand(drivebase::zeroGyro)));
+    new JoystickButton(driverXbox, 5).onTrue(new InstantCommand(drivebase::addFakeVisionReading));
+    // new JoystickButton(driverXbox,
+    //                    2).whileTrue(
+    //     Commands.deferredProxy(() -> drivebase.driveToPose(
+    //                                new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
+    //                           ));
   //  new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
 
-    //operatorXbox.a().onTrue(armIntake);
-    //operatorXbox.x().onTrue(armAmp);
-    //operatorXbox.y().onTrue(armLaunch);
-    operatorXbox.rightTrigger().whileTrue(intakeCollect).onFalse(intakeStill);
-    operatorXbox.leftTrigger().whileTrue(intakeAmp).onFalse(intakeStill);
-    //operatorXbox.rightBumper().onTrue(launchGamepiece);
-    //operatorXbox.rightBumper().onTrue(wait(500).andThen(intakeLaunch));
-    operatorXbox.rightBumper().onTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
-    
+    // operatorXbox.a().onTrue(armIntake);
+    // operatorXbox.x().onTrue(armAmp);
+    // operatorXbox.y().onTrue(armLaunch);
+    operatorXbox.leftBumper().whileTrue(intakeCollect);
+    operatorXbox.rightBumper().whileTrue(intakeAmp);
+    operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
 
   }
 
