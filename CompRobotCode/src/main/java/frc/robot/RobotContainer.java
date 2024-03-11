@@ -10,15 +10,19 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Teleop.AbsoluteDriveAdv;
 import frc.robot.commands.Teleop.LaunchGamepieceCommand;
 import frc.robot.commands.Teleop.MoveArmCommand;
+import frc.robot.commands.Teleop.MoveClimberCommand;
 import frc.robot.commands.Teleop.SpinIntakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LauncherSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -37,6 +41,7 @@ public class RobotContainer {
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LauncherSubsystem launcher = new LauncherSubsystem();
+  private final ClimberSubsystem climber = new ClimberSubsystem();
   
   //CommandJoystick driverController = new CommandJoystick(1);
   CommandXboxController driverXbox = new CommandXboxController(0);
@@ -57,6 +62,10 @@ public class RobotContainer {
     
   Command launchGamepiece = new LaunchGamepieceCommand(launcher, -1.0);
   Command launchStill = new LaunchGamepieceCommand(launcher, 0);
+
+  // Climber controls
+  Command climberExtend = new MoveClimberCommand(climber, 0.1);
+  Command climberRetract = new MoveClimberCommand(climber, -0.1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -90,7 +99,28 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+     
+    // new JoystickButton(driverXbox, 5).onTrue(new InstantCommand(drivebase::addFakeVisionReading));
+    // new JoystickButton(driverXbox,
+    //                    2).whileTrue(
+    //     Commands.deferredProxy(() -> drivebase.driveToPose(
+    //                                new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
+    //                           ));
+  //  new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
+
+    driverXbox.rightBumper().onTrue(new InstantCommand(drivebase::zeroGyro));
+    driverXbox.rightTrigger().whileTrue(climberExtend);
+    driverXbox.leftTrigger().whileTrue(climberRetract);
+
+    
+    operatorXbox.a().onTrue(armIntake);
+    operatorXbox.x().onTrue(armAmp);
+    operatorXbox.y().onTrue(armLaunch);
+    operatorXbox.leftBumper().whileTrue(intakeCollect);
+    operatorXbox.rightBumper().whileTrue(intakeAmp);
+    operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
+
+
     // driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
     // driverXbox.b().whileTrue(
     //     Commands.deferredProxy(() -> drivebase.driveToPose(
