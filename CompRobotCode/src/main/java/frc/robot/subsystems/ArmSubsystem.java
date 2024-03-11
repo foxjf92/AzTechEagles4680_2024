@@ -11,24 +11,15 @@ import frc.robot.commands.Teleop.MoveArmCommand;
 
 public class ArmSubsystem extends SubsystemBase {
     
-    private CANSparkMax armMotor; //Move to a certain position
-    public double armspeed; 
+    private CANSparkMax armMotor;
     public RelativeEncoder armEncoder;
-
-    public double setpoint;
-    public double errorSum;
-    public double lastTimestamp;
-    public double lastError;
-    //public double test = 6.5;
-
-    // private float kUpperLimitArmMotor = 65;   //TODO confirm which was is up or down and set
-    // private float kLowerLimitArmMotor = -5;  //TODO confirm which way is up or down and set
-
+    
     public ArmSubsystem(){
         armMotor = new CANSparkMax (9, CANSparkLowLevel.MotorType.kBrushless);
-   
         armMotor.setSmartCurrentLimit(40);
-        armMotor.setIdleMode(IdleMode.kCoast);
+        armMotor.setIdleMode(IdleMode.kBrake);
+
+        //// I don't think we need these with a properly tensioned chain and proper PID
         // armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         // armMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
         //armMotor.setSoftLimit(SoftLimitDirection.kForward, kUpperLimitArmMotor); 
@@ -39,13 +30,12 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic(){
-        //SmartDashboard.putString("Test", "chickendog");
-        SmartDashboard.putNumber("arm encoder: ", armEncoder.getPosition());
-        SmartDashboard.putNumber("Arm setpoint", MoveArmCommand.armSetpoint);
+        SmartDashboard.putNumber("Arm Position", armEncoder.getPosition());
+        SmartDashboard.putNumber("Arm Setpoint", MoveArmCommand.armSetpoint);
     }
 
-    public void moveArm(double armspeed) {
-        armMotor.set(armspeed);
+    public void moveArm(double armSpeed){
+        armMotor.set(armSpeed);
     }
 
 }

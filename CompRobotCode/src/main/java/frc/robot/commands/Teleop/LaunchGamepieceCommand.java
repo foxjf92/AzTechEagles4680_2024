@@ -16,7 +16,7 @@ public class LaunchGamepieceCommand extends Command{
 
     @Override
     public void initialize(){
-
+        
     }
 
     @Override

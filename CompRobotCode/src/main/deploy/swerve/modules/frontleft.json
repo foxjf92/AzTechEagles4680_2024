@@ -15,8 +15,8 @@
     "canbus": null
   },
   "conversionFactor": {
-    "angle": 0,
-    "drive": 0
+    "angle": null,
+    "drive": null
   },
   "encoder": {
     "type": "thrifty",

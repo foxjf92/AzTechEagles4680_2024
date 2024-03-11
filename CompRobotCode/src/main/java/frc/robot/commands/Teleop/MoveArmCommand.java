@@ -7,9 +7,9 @@ import frc.robot.subsystems.ArmSubsystem;
 
 public class MoveArmCommand extends Command{
     private final ArmSubsystem m_arm;
-    public static double armSetpoint; 
-    //private Timer timer = new Timer();
-    private int position; //Symbolic elevator position where 1 = ground intake, 2 = amp position, 3 = launch position
+    private int position; //Symbolic arm position where 1 = ground intake, 2 = amp position, 3 = launch position
+    public static double armSetpoint; // Encoder position value that corresponds to arm position
+
     
     public final double kP = 0.05; // TODO - Tune this second
     public final double kI = 0.0; // TODO - Tune this fourth
@@ -48,17 +48,8 @@ public class MoveArmCommand extends Command{
 
         m_arm.moveArm(controlEffort); 
 
-        SmartDashboard.putNumber("Target Position", position);
-        SmartDashboard.putNumber("Target Setpoint", armSetpoint);
-        SmartDashboard.putNumber("PID Setpoint", m_armPID.getSetpoint());
         SmartDashboard.putNumber("PID Error", m_armPID.getPositionError());
         SmartDashboard.putNumber("Control Effort", controlEffort);
-        
-        // SmartDashboard.putNumber("Target Position", 1.0);
-        // SmartDashboard.putNumber("Target Setpoint", 1.1);
-        // SmartDashboard.putNumber("PID Setpoint", 1.2);
-        // SmartDashboard.putNumber("PID Error", 1.3);
-        // SmartDashboard.putNumber("Control Effort", 1.4);
 
         }
 
