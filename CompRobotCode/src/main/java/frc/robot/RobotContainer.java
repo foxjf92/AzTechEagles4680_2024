@@ -34,22 +34,24 @@ public class RobotContainer {
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                         "swerve"));
 
-  private final LauncherSubsystem launcher = new LauncherSubsystem();
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
-                                                                        
+  private final LauncherSubsystem launcher = new LauncherSubsystem();
+  
   //CommandJoystick driverController = new CommandJoystick(1);
   CommandXboxController driverXbox = new CommandXboxController(0);
   CommandXboxController operatorXbox = new CommandXboxController(1);
 
-  Command armIntake = new MoveArmCommand(arm, 1);
-  Command armAmp = new MoveArmCommand(arm, 2);
-  Command armLaunch = new MoveArmCommand(arm, 3);
-
+  // Intake function commands
   Command intakeStill = new SpinIntakeCommand(intake, 0);
   Command intakeCollect = new SpinIntakeCommand(intake, -0.5);
   Command intakeAmp = new SpinIntakeCommand(intake, 0.5);
   Command intakeLaunch = new SpinIntakeCommand(intake, -1.0);
+
+  // Arm position
+  Command armIntake = new MoveArmCommand(arm, 1);
+  Command armAmp = new MoveArmCommand(arm, 2);
+  Command armLaunch = new MoveArmCommand(arm, 3);
 
   WaitCommand launchDelay = new WaitCommand(0.5);
     
