@@ -30,13 +30,13 @@ public class MoveArmCommand extends Command{
 
         // Arm Setpoints - 1 = ground intake, 2 = amp, 3 = launch position, 0'd off of ground level
         if (position == 1) {
-            armSetpoint = 3.0; // TODO Encoder Value for ground intake
+            armSetpoint = 2.0; // TODO Encoder Value for ground intake
         }
         if (position == 2) {
-            armSetpoint = 25.0; // TODO Encoder value for amp score
+            armSetpoint = 53.8; // TODO Encoder value for amp score
         }
         if (position == 3) {
-            armSetpoint = 56.0; // TODO encoder value for launch
+            armSetpoint = 58.5; // TODO encoder value for launch
         }
 
     }

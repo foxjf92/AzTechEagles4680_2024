@@ -17,7 +17,8 @@ public class ArmSubsystem extends SubsystemBase {
     public ArmSubsystem(){
         armMotor = new CANSparkMax (9, CANSparkLowLevel.MotorType.kBrushless);
         armMotor.setSmartCurrentLimit(40);
-        armMotor.setIdleMode(IdleMode.kBrake);
+        //armMotor.setIdleMode(IdleMode.kBrake);
+        armMotor.setIdleMode(IdleMode.kCoast);
 
         //// I don't think we need these with a properly tensioned chain and proper PID
         // armMotor.enableSoftLimit(SoftLimitDirection.kForward, true);

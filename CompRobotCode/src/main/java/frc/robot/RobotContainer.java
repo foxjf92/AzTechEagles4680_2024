@@ -41,7 +41,7 @@ public class RobotContainer {
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LauncherSubsystem launcher = new LauncherSubsystem();
-  private final ClimberSubsystem climber = new ClimberSubsystem();
+  //private final ClimberSubsystem climber = new ClimberSubsystem();
   
   //CommandJoystick driverController = new CommandJoystick(1);
   CommandXboxController driverXbox = new CommandXboxController(0);
@@ -49,7 +49,7 @@ public class RobotContainer {
 
   // Intake function commands
   Command intakeStill = new SpinIntakeCommand(intake, 0);
-  Command intakeCollect = new SpinIntakeCommand(intake, -0.5);
+  Command intakeCollect = new SpinIntakeCommand(intake, -0.3);
   Command intakeAmp = new SpinIntakeCommand(intake, 0.5);
   Command intakeLaunch = new SpinIntakeCommand(intake, -1.0);
 
@@ -58,14 +58,14 @@ public class RobotContainer {
   Command armAmp = new MoveArmCommand(arm, 2);
   Command armLaunch = new MoveArmCommand(arm, 3);
 
-  WaitCommand launchDelay = new WaitCommand(0.5);
+  WaitCommand launchDelay = new WaitCommand(2.0);
     
   Command launchGamepiece = new LaunchGamepieceCommand(launcher, -1.0);
   Command launchStill = new LaunchGamepieceCommand(launcher, 0);
 
-  // Climber controls
-  Command climberExtend = new MoveClimberCommand(climber, 0.1);
-  Command climberRetract = new MoveClimberCommand(climber, -0.1);
+  // // Climber controls
+  // Command climberExtend = new MoveClimberCommand(climber, 0.1);
+  // Command climberRetract = new MoveClimberCommand(climber, -0.1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -85,7 +85,9 @@ public class RobotContainer {
                                                                    driverXbox.getHID()::getBButtonPressed);
     
     drivebase.setDefaultCommand(closedAbsoluteDriveAdv);
-    
+    arm.setDefaultCommand(armLaunch);
+    intake.setDefaultCommand(intakeStill);
+    launcher.setDefaultCommand(launchStill);
   }
 
   /**
@@ -109,8 +111,8 @@ public class RobotContainer {
   //  new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
 
     driverXbox.rightBumper().onTrue(new InstantCommand(drivebase::zeroGyro));
-    driverXbox.rightTrigger().whileTrue(climberExtend);
-    driverXbox.leftTrigger().whileTrue(climberRetract);
+    // driverXbox.rightTrigger().whileTrue(climberExtend);
+    // driverXbox.leftTrigger().whileTrue(climberRetract);
 
     
     operatorXbox.a().onTrue(armIntake);
@@ -119,7 +121,6 @@ public class RobotContainer {
     operatorXbox.leftBumper().whileTrue(intakeCollect);
     operatorXbox.rightBumper().whileTrue(intakeAmp);
     operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
-
 
     // driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
     // driverXbox.b().whileTrue(
