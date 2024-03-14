@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -46,7 +47,7 @@ public class RobotContainer {
   //CommandJoystick driverController = new CommandJoystick(1);
   CommandXboxController driverXbox = new CommandXboxController(0);
   CommandXboxController operatorXbox = new CommandXboxController(1);
-
+  
   // Intake function commands
   Command intakeStill = new SpinIntakeCommand(intake, 0);
   Command intakeCollect = new SpinIntakeCommand(intake, -0.3);
@@ -62,6 +63,28 @@ public class RobotContainer {
     
   Command launchGamepiece = new LaunchGamepieceCommand(launcher, -1.0);
   Command launchStill = new LaunchGamepieceCommand(launcher, 0);
+
+  private double autoXV = 0.25;
+  private double autoYV = 0.0;
+  private double autoRotation = 0.0;
+
+
+  //Auton Drive Command
+  Command autoDriveCommand = new AbsoluteDriveAdv(drivebase,
+                                                                   () -> -MathUtil.applyDeadband(autoXV,
+                                                                                                OperatorConstants.LEFT_Y_DEADBAND),
+                                                                   () -> -MathUtil.applyDeadband(autoYV,
+                                                                                                OperatorConstants.LEFT_X_DEADBAND),
+                                                                   () -> -MathUtil.applyDeadband(autoRotation,
+                                                                                                OperatorConstants.RIGHT_X_DEADBAND),
+                                                                   driverXbox.getHID()::getYButtonPressed,
+                                                                   driverXbox.getHID()::getAButtonPressed,
+                                                                   driverXbox.getHID()::getXButtonPressed,
+                                                                   driverXbox.getHID()::getBButtonPressed);
+  
+  SequentialCommandGroup oneNoteAuto = new SequentialCommandGroup(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch))
+    .withTimeout(4)
+    .andThen(autoDriveCommand).withTimeout(1));
 
   // // Climber controls
   // Command climberExtend = new MoveClimberCommand(climber, 0.1);
@@ -138,6 +161,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand("New Auto");
+    return oneNoteAuto;
   }
 }
