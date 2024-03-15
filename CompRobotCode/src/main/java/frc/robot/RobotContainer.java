@@ -63,6 +63,7 @@ public class RobotContainer {
 
   // Arm position
   Command armIntake = new MoveArmCommand(arm, 1);
+  Command armIntakeToLaunch = new MoveArmCommand(arm, 3);
   Command armAmp = new MoveArmCommand(arm, 2);
   Command armLaunch = new MoveArmCommand(arm, 3);
 
@@ -178,7 +179,7 @@ public class RobotContainer {
     operatorXbox.x().onTrue(armAmp);
     operatorXbox.y().onTrue(armLaunch);
     operatorXbox.leftBumper().whileTrue(intakeCollect);
-    //operatorXbox.leftBumper().onTrue(intakeCollect.andThen(armLaunch));
+    //operatorXbox.leftBumper().whileTrue(intakeCollect.andThen(armIntakeToLaunch));
     operatorXbox.rightBumper().whileTrue(intakeAmp);
     operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
 
