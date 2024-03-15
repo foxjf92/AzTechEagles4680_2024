@@ -12,7 +12,7 @@ public class MoveArmCommand extends Command{
     public static double armSetpoint; // Encoder position value that corresponds to arm position
 
     
-    public final double kP = 0.05; // TODO - Tune this second
+    public final double kP = 0.04; // TODO - Tune this second
     public final double kI = 0.0; // TODO - Tune this fourth
     public final double kD = 0.005; // TODO - Tune this third
     public final double arbFF = 0.0007; //TODO - Tune this first

@@ -63,6 +63,7 @@ public class RobotContainer {
 
   // Arm position
   Command armIntake = new MoveArmCommand(arm, 1);
+  Command armIntakeStay = new MoveArmCommand(arm, 1);  
   Command armIntakeToLaunch = new MoveArmCommand(arm, 3);
   Command armAmp = new MoveArmCommand(arm, 2);
   Command armLaunch = new MoveArmCommand(arm, 3);
@@ -126,10 +127,10 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
 
-    autoChooser = new SendableChooser<Command>();
-    autoChooser.setDefaultOption("Launch", launchAuto);
-    autoChooser.setDefaultOption("Launch and Drive", launchAndDriveAuto);
-    autoChooser.setDefaultOption("Do Nothing", null);
+    // autoChooser = new SendableChooser<Command>();
+    // autoChooser.setDefaultOption("Launch", launchAuto);
+    // autoChooser.setDefaultOption("Launch and Drive", launchAndDriveAuto);
+    // autoChooser.setDefaultOption("Do Nothing", null);
 
 
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
@@ -180,6 +181,7 @@ public class RobotContainer {
     operatorXbox.y().onTrue(armLaunch);
     //operatorXbox.leftBumper().whileTrue(intakeCollect);
     operatorXbox.leftBumper().whileTrue(intakeCollect.andThen(armIntakeToLaunch));
+    //operatorXbox.leftBumper().whileTrue(intakeCollect.andThen(intake.notePresentSwitch.get() ? armIntakeStay : armIntakeToLaunch));
     operatorXbox.rightBumper().whileTrue(intakeAmp);
     operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
 
