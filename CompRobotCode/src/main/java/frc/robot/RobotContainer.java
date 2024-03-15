@@ -8,6 +8,7 @@ import java.io.File;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -37,6 +38,8 @@ import frc.robot.subsystems.SwerveSubsystem;
  */
 public class RobotContainer {                                                                    
   // The robot's subsystems and commands are defined here...
+  private static SendableChooser<Command> autoChooser;
+  
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                         "swerve"));
 
@@ -52,6 +55,7 @@ public class RobotContainer {
   // Intake function commands
   Command intakeStill = new SpinIntakeCommand(intake, 0);
   Command intakeCollect = new SpinIntakeCommand(intake, -0.3);
+  //Command intakeCollect = new 
   Command intakeAmp = new SpinIntakeCommand(intake, 0.5);
   Command intakeLaunch = new SpinIntakeCommand(intake, -1.0);
 
@@ -90,7 +94,8 @@ public class RobotContainer {
     .alongWith(new WaitCommand(1.25)
     .andThen(new SpinIntakeCommand(intake, -1.0)))
     .withTimeout(3);
-  Command launchAndDriveAuto = new LaunchGamepieceCommand(launcher, -.25)
+  
+    Command launchAndDriveAuto = new LaunchGamepieceCommand(launcher, -.25)
     .alongWith(new WaitCommand(1.25)
     .andThen(new SpinIntakeCommand(intake, -1.0)))
     .withTimeout(3.0)
@@ -117,6 +122,12 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    autoChooser = new SendableChooser<Command>();
+    autoChooser.setDefaultOption("Launch", launchAuto);
+    autoChooser.setDefaultOption("Launch and Drive", launchAndDriveAuto);
+    autoChooser.setDefaultOption("Do Nothing", null);
+
 
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
                                                                    () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
@@ -168,6 +179,7 @@ public class RobotContainer {
     operatorXbox.rightBumper().whileTrue(intakeAmp);
     operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
 
+    
     // driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
     // driverXbox.b().whileTrue(
     //     Commands.deferredProxy(() -> drivebase.driveToPose(

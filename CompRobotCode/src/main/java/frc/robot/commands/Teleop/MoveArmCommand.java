@@ -58,8 +58,8 @@ public class MoveArmCommand extends Command{
 
         m_arm.moveArm(controlEffort); 
 
-        SmartDashboard.putNumber("PID Error", m_armPID.getPositionError());
-        SmartDashboard.putNumber("Control Effort", controlEffort);
+        //SmartDashboard.putNumber("PID Error", m_armPID.getPositionError());
+        //SmartDashboard.putNumber("Control Effort", controlEffort);
 
         }
 
