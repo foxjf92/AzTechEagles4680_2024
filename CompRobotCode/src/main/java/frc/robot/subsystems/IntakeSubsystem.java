@@ -8,13 +8,15 @@ import java.util.function.BooleanSupplier;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.Teleop.MoveArmCommand;
 
 public class IntakeSubsystem extends SubsystemBase{
     private CANSparkMax intakeMotor1;
     private CANSparkMax intakeMotor2;
     public double intakeWheelRatio = 2.0/3.0; // ratio of smaller wheel to bigger wheel
-    public Boolean notePresent;
+    //public Boolean notePresent;
     public DigitalInput notePresentSwitch = new DigitalInput(0);
 
     public IntakeSubsystem(){
@@ -31,6 +33,12 @@ public class IntakeSubsystem extends SubsystemBase{
         intakeMotor1.set(speed);
         intakeMotor2.set(speed*intakeWheelRatio); // Derate larger wheel speed to match surface speed of smaller wheels
     }
+
+    @Override
+    public void periodic(){
+        SmartDashboard.putBoolean("Note Present Value", getNoteStatus());
+    }
+
 
     public void collectNote(double speed){
         if(notePresentSwitch.get()){

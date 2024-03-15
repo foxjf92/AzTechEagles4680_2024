@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Teleop.AbsoluteDriveAdv;
+import frc.robot.commands.Teleop.IntakeAmpCommand;
+import frc.robot.commands.Teleop.IntakeCollectCommand;
 import frc.robot.commands.Teleop.LaunchGamepieceCommand;
 import frc.robot.commands.Teleop.MoveArmCommand;
 import frc.robot.commands.Teleop.MoveClimberCommand;
@@ -54,7 +56,7 @@ public class RobotContainer {
   
   // Intake function commands
   Command intakeStill = new SpinIntakeCommand(intake, 0);
-  Command intakeCollect = new SpinIntakeCommand(intake, -0.3);
+  Command intakeCollect = new IntakeCollectCommand(intake, -0.3);
   //Command intakeCollect = new 
   Command intakeAmp = new SpinIntakeCommand(intake, 0.5);
   Command intakeLaunch = new SpinIntakeCommand(intake, -1.0);
@@ -95,7 +97,7 @@ public class RobotContainer {
     .andThen(new SpinIntakeCommand(intake, -1.0)))
     .withTimeout(3);
   
-    Command launchAndDriveAuto = new LaunchGamepieceCommand(launcher, -.25)
+    Command launchAndDriveAuto = new LaunchGamepieceCommand(launcher, -1.0)
     .alongWith(new WaitCommand(1.25)
     .andThen(new SpinIntakeCommand(intake, -1.0)))
     .withTimeout(3.0)
@@ -176,6 +178,7 @@ public class RobotContainer {
     operatorXbox.x().onTrue(armAmp);
     operatorXbox.y().onTrue(armLaunch);
     operatorXbox.leftBumper().whileTrue(intakeCollect);
+    //operatorXbox.leftBumper().onTrue(intakeCollect.andThen(armLaunch));
     operatorXbox.rightBumper().whileTrue(intakeAmp);
     operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
 

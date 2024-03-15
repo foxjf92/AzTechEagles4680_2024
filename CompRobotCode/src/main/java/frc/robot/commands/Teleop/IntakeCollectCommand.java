@@ -26,7 +26,7 @@ public class IntakeCollectCommand extends Command {
 
     @Override
     public boolean isFinished(){
-        if(m_intake.getNoteStatus()){
+        if(!m_intake.getNoteStatus()){
             return true;
         }
         return false;
