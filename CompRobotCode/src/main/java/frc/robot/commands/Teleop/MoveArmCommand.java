@@ -3,6 +3,7 @@ package frc.robot.commands.Teleop;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class MoveArmCommand extends Command{
@@ -29,16 +30,25 @@ public class MoveArmCommand extends Command{
     public void initialize(){
 
         // Arm Setpoints - 1 = ground intake, 2 = amp, 3 = launch position, 0'd off of ground level
+        // if (position == 1) {
+        //     armSetpoint = 2.0;
+        // }
+        // if (position == 2) {
+        //     armSetpoint = 53.8;
+        // }
+        // if (position == 3) {
+        //     armSetpoint = 58.5;
+        // }
+
         if (position == 1) {
-            armSetpoint = 2.0; // TODO Encoder Value for ground intake
+            armSetpoint = ArmConstants.intakePosition;
         }
         if (position == 2) {
-            armSetpoint = 53.8; // TODO Encoder value for amp score
+            armSetpoint = ArmConstants.ampPosition;
         }
         if (position == 3) {
-            armSetpoint = 58.5; // TODO encoder value for launch
+            armSetpoint = ArmConstants.launchPosition;
         }
-
     }
 
     @Override
