@@ -65,7 +65,7 @@ public class RobotContainer {
   Command launchGamepiece = new LaunchGamepieceCommand(launcher, -1.0);
   Command launchStill = new LaunchGamepieceCommand(launcher, 0);
 
-  private double autoXV = 0.75;
+  private double autoXV = 0.50;
   private double autoYV = 0.0;
   private double autoRotation = 0.0;
 
@@ -105,7 +105,7 @@ public class RobotContainer {
                                                                    driverXbox.getHID()::getAButtonPressed,
                                                                    driverXbox.getHID()::getXButtonPressed,
                                                                    driverXbox.getHID()::getBButtonPressed))
-      .withTimeout(5.0);
+      .withTimeout(3.0);
   
 
 
