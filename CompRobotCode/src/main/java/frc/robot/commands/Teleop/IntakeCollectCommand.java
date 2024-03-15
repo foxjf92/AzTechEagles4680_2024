@@ -21,7 +21,12 @@ public class IntakeCollectCommand extends Command {
 
     @Override
     public void execute(){
-        m_intake.spinIntake(intakeSpeed);
+        if(m_intake.getNoteStatus()){
+            m_intake.spinIntake(intakeSpeed);
+        }
+        else {
+            m_intake.spinIntake(0.0);
+        }
     }
 
     @Override

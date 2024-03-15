@@ -178,8 +178,8 @@ public class RobotContainer {
     operatorXbox.a().onTrue(armIntake);
     operatorXbox.x().onTrue(armAmp);
     operatorXbox.y().onTrue(armLaunch);
-    operatorXbox.leftBumper().whileTrue(intakeCollect);
-    //operatorXbox.leftBumper().whileTrue(intakeCollect.andThen(armIntakeToLaunch));
+    //operatorXbox.leftBumper().whileTrue(intakeCollect);
+    operatorXbox.leftBumper().whileTrue(intakeCollect.andThen(armIntakeToLaunch));
     operatorXbox.rightBumper().whileTrue(intakeAmp);
     operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
 
