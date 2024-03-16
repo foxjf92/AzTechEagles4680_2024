@@ -40,7 +40,7 @@ import frc.robot.subsystems.SwerveSubsystem;
  */
 public class RobotContainer {                                                                    
   // The robot's subsystems and commands are defined here...
-  private static SendableChooser<Command> autoChooser;
+  //private static SendableChooser<Command> autoChooser;
   
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                         "swerve"));
@@ -114,7 +114,7 @@ public class RobotContainer {
                                                                    driverXbox.getHID()::getAButtonPressed,
                                                                    driverXbox.getHID()::getXButtonPressed,
                                                                    driverXbox.getHID()::getBButtonPressed))
-      .withTimeout(3.0);
+      .withTimeout(7.0);
   
 
 
@@ -179,9 +179,9 @@ public class RobotContainer {
     operatorXbox.a().onTrue(armIntake);
     operatorXbox.x().onTrue(armAmp);
     operatorXbox.y().onTrue(armLaunch);
-    //operatorXbox.leftBumper().whileTrue(intakeCollect);
-    operatorXbox.leftBumper().whileTrue(intakeCollect.andThen(armIntakeToLaunch));
-    //operatorXbox.leftBumper().whileTrue(intakeCollect.andThen(intake.notePresentSwitch.get() ? armIntakeStay : armIntakeToLaunch));
+    operatorXbox.leftBumper().whileTrue(intakeCollect);
+    //operatorXbox.leftBumper().whileTrue(intakeCollect.andThen(armIntakeToLaunch));
+    //operatorXbox.leftBumper().whileTrue(intakeCollect.alongWith(armIntakeStay).andThen(intake.notePresentSwitch.get() ? armIntakeStay : armIntakeToLaunch));
     operatorXbox.rightBumper().whileTrue(intakeAmp);
     operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
 
@@ -203,8 +203,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     //return oneNoteAuto;
-    // return launchAuto;
-    return launchAndDriveAuto;
+    return launchAuto;
+    
+    //return launchAndDriveAuto;
   }
 
 }

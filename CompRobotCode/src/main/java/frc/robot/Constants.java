@@ -52,8 +52,12 @@ public final class Constants
 
   public static class ArmConstants
   {
-    public static final double launchPosition = 58.5; // TODO confirm this is best spot for launching
-    public static final double ampPosition = 53.8; // TODO check
-    public static final double intakePosition = 2.0; // TODO check 
+    // public static final double launchPosition = 58.5; // TODO confirm this is best spot for launching
+    // public static final double ampPosition = 53.8; // TODO check
+    // public static final double intakePosition = 2.5; // TODO check 
+
+    public static final double launchPosition = 3.5; // TODO confirm this is best spot for launching
+    public static final double ampPosition = -1.5; // TODO check
+    public static final double intakePosition = -50.8; // TODO check 
   }
 }

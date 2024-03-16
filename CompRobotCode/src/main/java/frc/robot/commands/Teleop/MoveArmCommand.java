@@ -1,6 +1,7 @@
 package frc.robot.commands.Teleop;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ArmConstants;
@@ -15,7 +16,10 @@ public class MoveArmCommand extends Command{
     public final double kP = 0.04; // TODO - Tune this second
     public final double kI = 0.0; // TODO - Tune this fourth
     public final double kD = 0.005; // TODO - Tune this third
-    public final double arbFF = 0.0007; //TODO - Tune this first
+    public final double arbFF = 0.0014; //TODO - Tune this first
+
+   // public SlewRateLimiter armFilter = new SlewRateLimiter(0.1);
+    //public double filterValue;
     
     private PIDController m_armPID = new PIDController(kP,kI,kD);
 
@@ -55,6 +59,9 @@ public class MoveArmCommand extends Command{
     public void execute(){
 
         double controlEffort = arbFF + m_armPID.calculate(m_arm.armEncoder.getPosition(), armSetpoint); // adds FF input to fight gravity
+
+        //filterValue = armFilter.calculate(controlEffort);
+        //controlEffort = filterValue;
 
         m_arm.moveArm(controlEffort); 
 
