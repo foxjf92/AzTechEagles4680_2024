@@ -56,8 +56,8 @@ public final class Constants
     // public static final double ampPosition = 53.8; // TODO check
     // public static final double intakePosition = 2.5; // TODO check 
 
-    public static final double launchPosition = 3.5; // TODO confirm this is best spot for launching
-    public static final double ampPosition = -1.5; // TODO check
-    public static final double intakePosition = -52.8; // TODO check 
+    public static final double launchPosition = 0.304; // TODO confirm this is best spot for launching
+    public static final double ampPosition = 0.325; // TODO check
+    public static final double intakePosition = 0.52; // TODO check 
   }
 }

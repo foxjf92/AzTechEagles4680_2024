@@ -68,7 +68,7 @@ public class RobotContainer {
   Command armAmp = new MoveArmCommand(arm, 2);
   Command armLaunch = new MoveArmCommand(arm, 3);
 
-  Command launchDelay = new WaitCommand(10.0);
+  Command launchDelay = new WaitCommand(1.0);
     
   Command launchGamepiece = new LaunchGamepieceCommand(launcher, -1.0);
   Command launchStill = new LaunchGamepieceCommand(launcher, 0);
