@@ -48,7 +48,7 @@ public class RobotContainer {
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LauncherSubsystem launcher = new LauncherSubsystem();
-  //private final ClimberSubsystem climber = new ClimberSubsystem();
+  private final ClimberSubsystem climber = new ClimberSubsystem();
   
   //CommandJoystick driverController = new CommandJoystick(1);
   CommandXboxController driverXbox = new CommandXboxController(0);
@@ -68,10 +68,16 @@ public class RobotContainer {
   Command armAmp = new MoveArmCommand(arm, 2);
   Command armLaunch = new MoveArmCommand(arm, 3);
 
-  Command launchDelay = new WaitCommand(1.25);
+  Command launchDelay = new WaitCommand(10.0);
     
   Command launchGamepiece = new LaunchGamepieceCommand(launcher, -1.0);
   Command launchStill = new LaunchGamepieceCommand(launcher, 0);
+
+  //Climb Commands
+  Command climbExtend = new MoveClimberCommand(climber, -1.0);
+  Command climbRetract = new MoveClimberCommand(climber, 1.0);
+  Command climbStill = new MoveClimberCommand(climber, 0.0);
+
 
   private double autoXV = 0.50;
   private double autoYV = 0.0;
@@ -95,10 +101,16 @@ public class RobotContainer {
   //   .withTimeout(4)
   //   .andThen(autoDriveCommand).withTimeout(1));
   Command launchAuto = new LaunchGamepieceCommand(launcher, -1.0)
-    .alongWith(new WaitCommand(1.25)
+    .alongWith(new WaitCommand(10.0)
     .andThen(new SpinIntakeCommand(intake, -1.0)))
     .withTimeout(3);
   
+  Command waitAndLaunchAuto = new WaitCommand(10.0)
+    .andThen(new LaunchGamepieceCommand(launcher, -1.0))
+    .alongWith(new WaitCommand(1.25)
+    .andThen(new SpinIntakeCommand(intake, -1.0)))
+    .withTimeout(3);
+
     Command launchAndDriveAuto = new LaunchGamepieceCommand(launcher, -1.0)
     .alongWith(new WaitCommand(1.25)
     .andThen(new SpinIntakeCommand(intake, -1.0)))
@@ -118,9 +130,6 @@ public class RobotContainer {
   
 
 
-  // // Climber controls
-  // Command climberExtend = new MoveClimberCommand(climber, 0.1);
-  // Command climberRetract = new MoveClimberCommand(climber, -0.1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -149,6 +158,7 @@ public class RobotContainer {
     arm.setDefaultCommand(armLaunch);
     intake.setDefaultCommand(intakeStill);
     launcher.setDefaultCommand(launchStill);
+    climber.setDefaultCommand(climbStill);
   }
 
   /**
@@ -172,8 +182,8 @@ public class RobotContainer {
   //  new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
 
     driverXbox.rightBumper().onTrue(new InstantCommand(drivebase::zeroGyro));
-    // driverXbox.rightTrigger().whileTrue(climberExtend);
-    // driverXbox.leftTrigger().whileTrue(climberRetract);
+    driverXbox.rightTrigger().whileTrue(climbExtend);
+    driverXbox.leftTrigger().whileTrue(climbRetract);
 
     
     operatorXbox.a().onTrue(armIntake);
@@ -204,6 +214,7 @@ public class RobotContainer {
     // An example command will be run in autonomous
     //return oneNoteAuto;
     return launchAuto;
+    //return waitAndLaunchAuto;
     
     //return launchAndDriveAuto;
   }
