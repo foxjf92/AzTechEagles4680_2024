@@ -26,9 +26,10 @@ public class IntakeLaunchCommand extends Command {
 
     @Override
     public boolean isFinished(){
-        if(m_intake.getNoteStatus()){
-            return true;
-        }
+        //// TODO: I don't think we care about this command ending
+        // if(m_intake.getNoteStatus()){
+        //     return true;
+        // }
         return false;
     }
 }

@@ -3,14 +3,11 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 
-import java.util.function.BooleanSupplier;
-
 import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.Teleop.MoveArmCommand;
 
 public class IntakeSubsystem extends SubsystemBase{
     private CANSparkMax intakeMotor1;
@@ -40,27 +37,28 @@ public class IntakeSubsystem extends SubsystemBase{
     }
 
 
-    public void collectNote(double speed){
-        if(notePresentSwitch.get()){
-            intakeMotor1.set(speed);
-            intakeMotor2.set(speed*intakeWheelRatio);
-        }
-        else{
-            intakeMotor1.set(0.0);
-            intakeMotor2.set(0.0);
-        }
-    }
+    //// TODO: I don't think we were using these, but if intake doesn't work fix it 
+    // public void collectNote(double speed){
+    //     if(notePresentSwitch.get()){
+    //         intakeMotor1.set(speed);
+    //         intakeMotor2.set(speed*intakeWheelRatio);
+    //     }
+    //     else{
+    //         intakeMotor1.set(0.0);
+    //         intakeMotor2.set(0.0);
+    //     }
+    // }
 
-    public void dispenseNote(double speed){
-        if(notePresentSwitch.get()){
-            intakeMotor1.set(speed);
-            intakeMotor2.set(speed*intakeWheelRatio);
-        }
-        else{
-            intakeMotor1.set(0.0);
-            intakeMotor2.set(0.0);
-        }
-    }
+    // public void dispenseNote(double speed){
+    //     if(notePresentSwitch.get()){
+    //         intakeMotor1.set(speed);
+    //         intakeMotor2.set(speed*intakeWheelRatio);
+    //     }
+    //     else{
+    //         intakeMotor1.set(0.0);
+    //         intakeMotor2.set(0.0);
+    //     }
+    // }
 
     public boolean getNoteStatus() {
         return notePresentSwitch.get();

@@ -8,19 +8,13 @@ import java.io.File;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Teleop.AbsoluteDriveAdv;
-import frc.robot.commands.Teleop.IntakeAmpCommand;
 import frc.robot.commands.Teleop.IntakeCollectCommand;
 import frc.robot.commands.Teleop.LaunchGamepieceCommand;
 import frc.robot.commands.Teleop.MoveArmCommand;
@@ -57,16 +51,17 @@ public class RobotContainer {
   // Intake function commands
   Command intakeStill = new SpinIntakeCommand(intake, 0);
   Command intakeCollect = new IntakeCollectCommand(intake, -0.3);
-  //Command intakeCollect = new 
   Command intakeAmp = new SpinIntakeCommand(intake, 0.5);
   Command intakeLaunch = new SpinIntakeCommand(intake, -1.0);
 
   // Arm position
   Command armIntake = new MoveArmCommand(arm, 1);
-  Command armIntakeStay = new MoveArmCommand(arm, 1);  
+  Command armIntakeHold = new MoveArmCommand(arm, 1);  
   Command armIntakeToLaunch = new MoveArmCommand(arm, 3);
   Command armAmp = new MoveArmCommand(arm, 2);
   Command armLaunch = new MoveArmCommand(arm, 3);
+  // Command armStage = new MoveArmCommand(arm, 3);
+  // Command armPush = new MoveArmCommand(arm, 4);
 
   Command launchDelay = new WaitCommand(1.0);
     
@@ -100,6 +95,7 @@ public class RobotContainer {
   // SequentialCommandGroup oneNoteAuto = new SequentialCommandGroup(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch))
   //   .withTimeout(4)
   //   .andThen(autoDriveCommand).withTimeout(1));
+
   Command launchAuto = new LaunchGamepieceCommand(launcher, -1.0)
     .alongWith(new WaitCommand(10.0)
     .andThen(new SpinIntakeCommand(intake, -1.0)))
@@ -179,7 +175,7 @@ public class RobotContainer {
     //     Commands.deferredProxy(() -> drivebase.driveToPose(
     //                                new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
     //                           ));
-  //  new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
+    //  new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
 
     driverXbox.rightBumper().onTrue(new InstantCommand(drivebase::zeroGyro));
     driverXbox.rightTrigger().whileTrue(climbExtend);
@@ -190,10 +186,12 @@ public class RobotContainer {
     operatorXbox.x().onTrue(armAmp);
     operatorXbox.y().onTrue(armLaunch);
     operatorXbox.leftBumper().whileTrue(intakeCollect);
-    //operatorXbox.leftBumper().whileTrue(intakeCollect.andThen(armIntakeToLaunch));
-    //operatorXbox.leftBumper().whileTrue(intakeCollect.alongWith(armIntakeStay).andThen(intake.notePresentSwitch.get() ? armIntakeStay : armIntakeToLaunch));
+    //// Try the below logic to automate collection
+    //operatorXbox.leftBumper().whileTrue(intakeCollect.raceWith(armIntakeHold).andThen(intake.notePresentSwitch.get() ? armIntakeHold : armIntakeToLaunch));
+    
     operatorXbox.rightBumper().whileTrue(intakeAmp);
     operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
+
 
     
     // driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));

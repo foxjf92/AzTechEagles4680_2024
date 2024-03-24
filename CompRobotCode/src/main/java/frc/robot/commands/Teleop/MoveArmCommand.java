@@ -1,8 +1,6 @@
 package frc.robot.commands.Teleop;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
@@ -58,7 +56,11 @@ public class MoveArmCommand extends Command{
         }
         if (position == 3) {
             armSetpoint = ArmConstants.launchPosition;
+            // armSetpoint = ArmConstants.stagePosition;
         }
+        // if (position == 4) {
+        //     armSetpoint = ArmConstants.pushPosition;
+        // }
     }
 
     @Override
@@ -66,15 +68,8 @@ public class MoveArmCommand extends Command{
 
         double controlEffort = arbFF - m_armPID.calculate(m_arm.armEncoder.getAbsolutePosition(), armSetpoint); // adds FF input to fight gravity
 
-        //filterValue = armFilter.calculate(controlEffort);
-        //controlEffort = filterValue;
-
-        m_arm.moveArm(controlEffort); 
-
-        //SmartDashboard.putNumber("PID Error", m_armPID.getPositionError());
-        //SmartDashboard.putNumber("Control Effort", controlEffort);
-
-        }
+        m_arm.moveArm(controlEffort);
+    }
 
     @Override
     public boolean isFinished(){
