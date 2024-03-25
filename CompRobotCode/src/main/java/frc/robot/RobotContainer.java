@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Teleop.AbsoluteDriveAdv;
@@ -103,7 +102,7 @@ public class RobotContainer {
   //   .andThen(autoDriveCommand).withTimeout(1));
 
   Command launchAuto = new LaunchGamepieceCommand(launcher, -1.0)
-    .alongWith(new WaitCommand(10.0)
+    .alongWith(new WaitCommand(1.25)
     .andThen(new SpinIntakeCommand(intake, -1.0)))
     .withTimeout(3);
   
@@ -111,7 +110,7 @@ public class RobotContainer {
     .andThen(new LaunchGamepieceCommand(launcher, -1.0))
     .alongWith(new WaitCommand(1.25)
     .andThen(new SpinIntakeCommand(intake, -1.0)))
-    .withTimeout(3);
+    .withTimeout(12);
 
     Command launchAndDriveAuto = new LaunchGamepieceCommand(launcher, -1.0)
     .alongWith(new WaitCommand(1.25)
@@ -160,9 +159,9 @@ public class RobotContainer {
 // //Modified w/Boost Button TODO Try Boost button
 //     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
 //                                                                    () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
-//                                                                                                 OperatorConstants.LEFT_Y_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 1.0 : 0.5),
+//                                                                                                 OperatorConstants.LEFT_Y_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 0.5 : 1.0),
 //                                                                    () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
-//                                                                                                 OperatorConstants.LEFT_X_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 1.0 : 0.5),
+//                                                                                                 OperatorConstants.LEFT_X_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 0.5 : 1.0),
 //                                                                    () -> -MathUtil.applyDeadband(driverXbox.getRightX(),
 //                                                                                                 OperatorConstants.RIGHT_X_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 1.0 : 0.5),
 //                                                                    driverXbox.getHID()::getYButtonPressed,
@@ -175,15 +174,15 @@ public class RobotContainer {
     // controls are front-left positive
     // left stick controls translation
     // right stick controls the desired angle NOT angular rotation
-    //Added Boost Button
-    Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 1.0 : 0.5),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 1.0 : 0.5),
-        () -> driverXbox.getRightX(),
-        () -> driverXbox.getRightY());
+    // //Added Boost Button
+    // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
+    //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 1.0 : 0.5),
+    //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 1.0 : 0.5),
+    //     () -> driverXbox.getRightX(),
+    //     () -> driverXbox.getRightY());
     
     drivebase.setDefaultCommand(closedAbsoluteDriveAdv);
-    //drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+    // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
     arm.setDefaultCommand(armLaunch);
     intake.setDefaultCommand(intakeStill);
     launcher.setDefaultCommand(launchStill);
