@@ -83,31 +83,29 @@ public class AbsoluteDriveAdv extends Command
     // Face Away from Drivers
     if (lookAway.getAsBoolean())
     {
-      headingX = 1;
-      headingY = 0;
+      headingY = -1;
     }
     // Face Right
     if (lookRight.getAsBoolean())
     {
-      headingX = 0;
-      headingY = -1;
+      headingX = 1;
     }
     // Face Left
     if (lookLeft.getAsBoolean())
     {
       headingX = -1;
-      headingY = 0;
     }
     // Face Towards the Drivers
     if (lookTowards.getAsBoolean())
     {
-      headingX = 0;
       headingY = 1;
     }
 
     // Prevent Movement After Auto
     if (resetHeading)
     {
+      ////Original Line
+      // if (headingX == 0 && headingY == 0 && Math.abs(headingAdjust.getAsDouble()) > 0)
       if (headingX == 0 && headingY == 0 && Math.abs(headingAdjust.getAsDouble()) == 0)
       {
         // Get the curret Heading
@@ -133,6 +131,9 @@ public class AbsoluteDriveAdv extends Command
 
     // Make the robot move
     if (headingX == 0 && headingY == 0 && Math.abs(headingAdjust.getAsDouble()) > 0)
+    ////Logic change? TODO try this and chang ing above logic back to original?
+    // if (headingX == 0 && headingY == 0 && Math.abs(headingAdjust.getAsDouble()) == 0)
+
     {
       resetHeading = true;
       swerve.drive(translation, (Constants.OperatorConstants.TURN_CONSTANT * -headingAdjust.getAsDouble()), true);

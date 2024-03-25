@@ -22,7 +22,7 @@ public final class Constants
 {
 
   public static final double ROBOT_MASS = 80 * 0.453592; // 70lbs * kg per pound
-  public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
+  public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(14)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
 
 
@@ -44,9 +44,9 @@ public final class Constants
   {
 
     // Joystick Deadband
-    public static final double LEFT_X_DEADBAND  = 0.05;
-    public static final double LEFT_Y_DEADBAND  = 0.05;
-    public static final double RIGHT_X_DEADBAND = 0.05;
+    public static final double LEFT_X_DEADBAND  = 0.02;
+    public static final double LEFT_Y_DEADBAND  = 0.02;
+    public static final double RIGHT_X_DEADBAND = 0.02;
     public static final double TURN_CONSTANT    = 6;
   }
 
@@ -57,6 +57,7 @@ public final class Constants
     // public static final double ampPosition = 53.8; // TODO check
     // public static final double intakePosition = 2.5; // TODO check 
 
+    //Through bore encoder values
     public static final double launchPosition = 0.304; // TODO confirm this is best spot for launching
     public static final double ampPosition = 0.325; // TODO check
     public static final double intakePosition = 0.52; // TODO check 

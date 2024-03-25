@@ -10,20 +10,10 @@ public class MoveArmCommand extends Command{
     private int position; //Symbolic arm position where 1 = ground intake, 2 = amp position, 3 = launch position
     public static double armSetpoint; // Encoder position value that corresponds to arm position
 
-    
-    // public final double kP = 0.04; // TODO - Tune this second
-    // public final double kI = 0.0; // TODO - Tune this fourth
-    // public final double kD = 0.005; // TODO - Tune this third
-    // public final double arbFF = 0.0014; //TODO - Tune this first
-
     public final double kP = 4.0; // TODO - Tune this second
     public final double kI = 0.0; // TODO - Tune this fourth
     public final double kD = 0.0; // TODO - Tune this third
     public final double arbFF = 0.025; //TODO - Tune this first
-
-
-   // public SlewRateLimiter armFilter = new SlewRateLimiter(0.1);
-    //public double filterValue;
     
     private PIDController m_armPID = new PIDController(kP,kI,kD);
 
@@ -36,17 +26,6 @@ public class MoveArmCommand extends Command{
 
     @Override
     public void initialize(){
-
-        // Arm Setpoints - 1 = ground intake, 2 = amp, 3 = launch position, 0'd off of ground level
-        // if (position == 1) {
-        //     armSetpoint = 2.0;
-        // }
-        // if (position == 2) {
-        //     armSetpoint = 53.8;
-        // }
-        // if (position == 3) {
-        //     armSetpoint = 58.5;
-        // }
 
         if (position == 1) {
             armSetpoint = ArmConstants.intakePosition;
@@ -66,7 +45,7 @@ public class MoveArmCommand extends Command{
     @Override
     public void execute(){
 
-        double controlEffort = arbFF - m_armPID.calculate(m_arm.armEncoder.getAbsolutePosition(), armSetpoint); // adds FF input to fight gravity
+        double controlEffort = arbFF - m_armPID.calculate(m_arm.armEncoder.getAbsolutePosition(), armSetpoint); // adds FF input to fight gravity, subtract PID output due to encoder inversion
 
         m_arm.moveArm(controlEffort);
     }

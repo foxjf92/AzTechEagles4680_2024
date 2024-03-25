@@ -1,6 +1,11 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
+//
+// drive code credit to Zafar Gunal/YAGSL https://github.com/ZaferGunal/Swerve2024
+//
+//
+//
 
 package frc.robot;
 
@@ -12,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Teleop.AbsoluteDriveAdv;
@@ -137,6 +143,7 @@ public class RobotContainer {
     // autoChooser.setDefaultOption("Launch and Drive", launchAndDriveAuto);
     // autoChooser.setDefaultOption("Do Nothing", null);
 
+    
 
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
                                                                    () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
@@ -149,8 +156,34 @@ public class RobotContainer {
                                                                    driverXbox.getHID()::getAButtonPressed,
                                                                    driverXbox.getHID()::getXButtonPressed,
                                                                    driverXbox.getHID()::getBButtonPressed);
+
+// //Modified w/Boost Button TODO Try Boost button
+//     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
+//                                                                    () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
+//                                                                                                 OperatorConstants.LEFT_Y_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 1.0 : 0.5),
+//                                                                    () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
+//                                                                                                 OperatorConstants.LEFT_X_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 1.0 : 0.5),
+//                                                                    () -> -MathUtil.applyDeadband(driverXbox.getRightX(),
+//                                                                                                 OperatorConstants.RIGHT_X_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 1.0 : 0.5),
+//                                                                    driverXbox.getHID()::getYButtonPressed,
+//                                                                    driverXbox.getHID()::getAButtonPressed,
+//                                                                    driverXbox.getHID()::getXButtonPressed,
+//                                                                    driverXbox.getHID()::getBButtonPressed);
+                                                              
+     // Applies deadbands and inverts controls because joysticks
+    // are back-right positive while robot
+    // controls are front-left positive
+    // left stick controls translation
+    // right stick controls the desired angle NOT angular rotation
+    //Added Boost Button
+    Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
+        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 1.0 : 0.5),
+        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 1.0 : 0.5),
+        () -> driverXbox.getRightX(),
+        () -> driverXbox.getRightY());
     
     drivebase.setDefaultCommand(closedAbsoluteDriveAdv);
+    //drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
     arm.setDefaultCommand(armLaunch);
     intake.setDefaultCommand(intakeStill);
     launcher.setDefaultCommand(launchStill);
@@ -177,7 +210,9 @@ public class RobotContainer {
     //                           ));
     //  new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
 
-    driverXbox.rightBumper().onTrue(new InstantCommand(drivebase::zeroGyro));
+    ////Old mapping, TODO re-teach controls 
+    //driverXbox.rightBumper().onTrue(new InstantCommand(drivebase::zeroGyro));
+    driverXbox.leftBumper().onTrue(new InstantCommand(drivebase::zeroGyro));    
     driverXbox.rightTrigger().whileTrue(climbExtend);
     driverXbox.leftTrigger().whileTrue(climbRetract);
 
