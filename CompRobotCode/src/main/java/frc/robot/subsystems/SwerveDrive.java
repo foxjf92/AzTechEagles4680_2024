@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.Pigeon2;
-
+import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,7 +11,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 
 
@@ -67,7 +65,6 @@ public class SwerveDrive extends SubsystemBase {
 
     //private final AHRS gyro = new AHRS(I2C.Port.kOnboard);
     Pigeon2 m_imu;
-    
 
     private SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, new Rotation2d(), new SwerveModulePosition[]{frontLeft.getpos(), frontRight.getpos(), backLeft.getpos(), backRight.getpos()});
     //private SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics, new Rotation2d(0), null);
@@ -103,7 +100,7 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public double getHeading() {
-        return -Math.IEEEremainder(m_imu.getYaw(), 360);
+        return -Math.IEEEremainder(m_imu.getYaw().getValueAsDouble(), 360);
     }
 
     public Rotation2d getRotation2d() {
