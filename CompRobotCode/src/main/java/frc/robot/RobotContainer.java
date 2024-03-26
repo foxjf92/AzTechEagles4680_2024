@@ -13,11 +13,13 @@ import java.io.File;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Teleop.AbsoluteDriveAdv;
 import frc.robot.commands.Teleop.IntakeCollectCommand;
@@ -25,11 +27,14 @@ import frc.robot.commands.Teleop.LaunchGamepieceCommand;
 import frc.robot.commands.Teleop.MoveArmCommand;
 import frc.robot.commands.Teleop.MoveClimberCommand;
 import frc.robot.commands.Teleop.SpinIntakeCommand;
+import frc.robot.commands.Teleop.SwerveJoystickCmd;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LauncherSubsystem;
+import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.SwerveDrive;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -41,6 +46,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //private static SendableChooser<Command> autoChooser;
   
+  // private final SwerveDrive swerveDrive = new SwerveDrive(); // TODO old swerve subsystem
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                         "swerve"));
 
@@ -49,7 +55,7 @@ public class RobotContainer {
   private final LauncherSubsystem launcher = new LauncherSubsystem();
   private final ClimberSubsystem climber = new ClimberSubsystem();
   
-  //CommandJoystick driverController = new CommandJoystick(1);
+  // public static XboxController driveController = new XboxController(0); //TODO Old style controller for swerve
   CommandXboxController driverXbox = new CommandXboxController(0);
   CommandXboxController operatorXbox = new CommandXboxController(1);
   
@@ -187,6 +193,16 @@ public class RobotContainer {
     intake.setDefaultCommand(intakeStill);
     launcher.setDefaultCommand(launchStill);
     climber.setDefaultCommand(climbStill);
+
+    // //Old Swerve Code Command TODO Try this old stuff
+    // swerveDrive.setDefaultCommand(new SwerveJoystickCmd(swerveDrive, 
+            
+    //         ()-> -driveController.getRawAxis(OIConstants.kDriverYAxis), //Y axis left stick drive controller 
+    //         ()-> driveController.getRawAxis(OIConstants.kDriverXAxis), //x axis left stick drive controller
+    //         ()-> driveController.getRawAxis(OIConstants.kDriverRotAxis), //x axis right stick drive controller
+    //         ()-> !driveController.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+
+
   }
 
   /**
