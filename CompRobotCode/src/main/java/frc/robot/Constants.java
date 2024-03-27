@@ -48,10 +48,10 @@ public final class Constants
   {
 
     // Joystick Deadband
-    public static final double LEFT_X_DEADBAND  = 0.05;
-    public static final double LEFT_Y_DEADBAND  = 0.05;
-    public static final double RIGHT_X_DEADBAND = 0.05;
-    public static final double RIGHT_Y_DEADBAND = 0.05;
+    public static final double LEFT_X_DEADBAND  = 0.08;
+    public static final double LEFT_Y_DEADBAND  = 0.08;
+    public static final double RIGHT_X_DEADBAND = 0.08;
+    public static final double RIGHT_Y_DEADBAND = 0.08;
     public static final double TURN_CONSTANT    = 6;
   }
 
@@ -64,7 +64,7 @@ public final class Constants
 
     //Through bore encoder values
     public static final double launchPosition = 0.304; // TODO confirm this is best spot for launching
-    public static final double ampPosition = 0.325; // TODO check
+    public static final double ampPosition = 0.329; // TODO check
     public static final double intakePosition = 0.52; // TODO check 
 
     //Push-feed constants

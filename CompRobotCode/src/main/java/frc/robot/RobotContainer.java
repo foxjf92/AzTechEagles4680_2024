@@ -62,7 +62,7 @@ public class RobotContainer {
   // Intake function commands
   Command intakeStill = new SpinIntakeCommand(intake, 0);
   Command intakeCollect = new IntakeCollectCommand(intake, -0.3);
-  Command intakeAmp = new SpinIntakeCommand(intake, 0.5);
+  Command intakeAmp = new SpinIntakeCommand(intake, 0.3);
   Command intakeLaunch = new SpinIntakeCommand(intake, -1.0);
 
   // Arm position
@@ -181,14 +181,14 @@ public class RobotContainer {
     // left stick controls translation
     // right stick controls the desired angle NOT angular rotation
     // //Added Boost Button
-    // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-    //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 1.0 : 0.5),
-    //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND)*(driverXbox.rightBumper().getAsBoolean() ? 1.0 : 0.5),
-    //     () -> driverXbox.getRightX(),
-    //     () -> driverXbox.getRightY());
+    Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
+        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+        () -> driverXbox.getRightX(),
+        () -> driverXbox.getRightY());
     
     drivebase.setDefaultCommand(closedAbsoluteDriveAdv);
-    // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+   // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
     arm.setDefaultCommand(armLaunch);
     intake.setDefaultCommand(intakeStill);
     launcher.setDefaultCommand(launchStill);
