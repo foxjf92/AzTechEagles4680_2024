@@ -2,7 +2,6 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 //
-// drive code credit to Zafar Gunal/YAGSL https://github.com/ZaferGunal/Swerve2024
 //
 //
 //
@@ -13,13 +12,11 @@ import java.io.File;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Teleop.AbsoluteDriveAdv;
 import frc.robot.commands.Teleop.IntakeCollectCommand;
@@ -27,14 +24,11 @@ import frc.robot.commands.Teleop.LaunchGamepieceCommand;
 import frc.robot.commands.Teleop.MoveArmCommand;
 import frc.robot.commands.Teleop.MoveClimberCommand;
 import frc.robot.commands.Teleop.SpinIntakeCommand;
-import frc.robot.commands.Teleop.SwerveJoystickCmd;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LauncherSubsystem;
-import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.SwerveDrive;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -46,7 +40,6 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //private static SendableChooser<Command> autoChooser;
   
-  // private final SwerveDrive swerveDrive = new SwerveDrive(); // TODO old swerve subsystem
   private final SwerveSubsystem drivebase = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                         "swerve"));
 
@@ -55,7 +48,6 @@ public class RobotContainer {
   private final LauncherSubsystem launcher = new LauncherSubsystem();
   private final ClimberSubsystem climber = new ClimberSubsystem();
   
-  // public static XboxController driveController = new XboxController(0); //TODO Old style controller for swerve
   CommandXboxController driverXbox = new CommandXboxController(0);
   CommandXboxController operatorXbox = new CommandXboxController(1);
   
@@ -71,11 +63,8 @@ public class RobotContainer {
   Command armIntakeToLaunch = new MoveArmCommand(arm, 3);
   Command armAmp = new MoveArmCommand(arm, 2);
   Command armLaunch = new MoveArmCommand(arm, 3);
-  // Command armStage = new MoveArmCommand(arm, 3);
-  // Command armPush = new MoveArmCommand(arm, 4);
 
   Command launchDelay = new WaitCommand(1.0);
-    
   Command launchGamepiece = new LaunchGamepieceCommand(launcher, -1.0);
   Command launchStill = new LaunchGamepieceCommand(launcher, 0);
 
@@ -84,11 +73,9 @@ public class RobotContainer {
   Command climbRetract = new MoveClimberCommand(climber, 1.0);
   Command climbStill = new MoveClimberCommand(climber, 0.0);
 
-
   private double autoXV = 0.50;
   private double autoYV = 0.0;
   private double autoRotation = 0.0;
-
 
   //Auton Commands
   Command autoDriveCommand = new AbsoluteDriveAdv(drivebase,
@@ -123,16 +110,25 @@ public class RobotContainer {
     .andThen(new SpinIntakeCommand(intake, -1.0)))
     .withTimeout(3.0)
     .andThen(new AbsoluteDriveAdv(drivebase,
-                                                                   () -> -MathUtil.applyDeadband(autoXV,
-                                                                                                OperatorConstants.LEFT_Y_DEADBAND),
-                                                                   () -> -MathUtil.applyDeadband(autoYV,
-                                                                                                OperatorConstants.LEFT_X_DEADBAND),
-                                                                   () -> -MathUtil.applyDeadband(autoRotation,
-                                                                                                OperatorConstants.RIGHT_X_DEADBAND),
+                                                                  () -> -autoXV,
+                                                                  () -> -autoYV,
+                                                                  () -> -autoRotation,
                                                                    driverXbox.getHID()::getYButtonPressed,
                                                                    driverXbox.getHID()::getAButtonPressed,
                                                                    driverXbox.getHID()::getXButtonPressed,
                                                                    driverXbox.getHID()::getBButtonPressed))
+    
+    // .andThen(new AbsoluteDriveAdv(drivebase,
+    //                                                                () -> -MathUtil.applyDeadband(autoXV,
+    //                                                                                             OperatorConstants.LEFT_Y_DEADBAND),
+    //                                                                () -> -MathUtil.applyDeadband(autoYV,
+    //                                                                                             OperatorConstants.LEFT_X_DEADBAND),
+    //                                                                () -> -MathUtil.applyDeadband(autoRotation,
+    //                                                                                             OperatorConstants.RIGHT_X_DEADBAND),
+    //                                                                driverXbox.getHID()::getYButtonPressed,
+    //                                                                driverXbox.getHID()::getAButtonPressed,
+    //                                                                driverXbox.getHID()::getXButtonPressed,
+    //                                                                driverXbox.getHID()::getBButtonPressed))
       .withTimeout(7.0);
   
 
@@ -149,14 +145,14 @@ public class RobotContainer {
     // autoChooser.setDefaultOption("Do Nothing", null);
 
     
-
+    //TODO Determine which
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
                                                                    () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
                                                                                                 OperatorConstants.LEFT_Y_DEADBAND),
                                                                    () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
                                                                                                 OperatorConstants.LEFT_X_DEADBAND),
-                                                                   () -> -MathUtil.applyDeadband(driverXbox.getRightX(),
-                                                                                                OperatorConstants.RIGHT_X_DEADBAND),
+                                                                   () -> MathUtil.applyDeadband(driverXbox.getRightX(),
+                                                                                                OperatorConstants.RIGHT_X_DEADBAND),//TODO confirm Arturo doesn't want rotation inverted
                                                                    driverXbox.getHID()::getYButtonPressed,
                                                                    driverXbox.getHID()::getAButtonPressed,
                                                                    driverXbox.getHID()::getXButtonPressed,
@@ -180,29 +176,19 @@ public class RobotContainer {
     // controls are front-left positive
     // left stick controls translation
     // right stick controls the desired angle NOT angular rotation
-    // //Added Boost Button
-    Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
-        () -> driverXbox.getRightX(),
-        () -> driverXbox.getRightY());
+    
+    // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
+    //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+    //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.LEFT_X_DEADBAND),
+    //     () -> driverXbox.getRightX(),
+    //     () -> driverXbox.getRightY());
+    // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle); 
     
     drivebase.setDefaultCommand(closedAbsoluteDriveAdv);
-   // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
     arm.setDefaultCommand(armLaunch);
     intake.setDefaultCommand(intakeStill);
     launcher.setDefaultCommand(launchStill);
     climber.setDefaultCommand(climbStill);
-
-    // //Old Swerve Code Command TODO Try this old stuff
-    // swerveDrive.setDefaultCommand(new SwerveJoystickCmd(swerveDrive, 
-            
-    //         ()-> -driveController.getRawAxis(OIConstants.kDriverYAxis), //Y axis left stick drive controller 
-    //         ()-> driveController.getRawAxis(OIConstants.kDriverXAxis), //x axis left stick drive controller
-    //         ()-> driveController.getRawAxis(OIConstants.kDriverRotAxis), //x axis right stick drive controller
-    //         ()-> !driveController.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
-
-
   }
 
   /**
