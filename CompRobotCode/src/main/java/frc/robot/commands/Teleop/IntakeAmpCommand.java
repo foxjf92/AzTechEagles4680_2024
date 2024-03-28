@@ -26,10 +26,6 @@ public class IntakeAmpCommand extends Command {
 
     @Override
     public boolean isFinished(){
-         //// TODO: I don't think we care about this command ending
-        // if(m_intake.getNoteStatus()){
-        //     return true;
-        // }
         return false;
     }
 }

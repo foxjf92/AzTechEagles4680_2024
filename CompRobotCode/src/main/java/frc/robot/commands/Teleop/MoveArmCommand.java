@@ -10,10 +10,10 @@ public class MoveArmCommand extends Command{
     private int position; //Symbolic arm position where 1 = ground intake, 2 = amp position, 3 = launch position
     public static double armSetpoint; // Encoder position value that corresponds to arm position
 
-    public final double kP = 4.0; // TODO - Tune this second
-    public final double kI = 0.0; // TODO - Tune this fourth
-    public final double kD = 0.0; // TODO - Tune this third
-    public final double arbFF = 0.025; //TODO - Tune this first
+    public final double kP = 4.0;
+    public final double kI = 0.0;
+    public final double kD = 0.0;
+    public final double arbFF = 0.025; 
     
     private PIDController m_armPID = new PIDController(kP,kI,kD);
 

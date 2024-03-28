@@ -13,7 +13,6 @@ public class IntakeSubsystem extends SubsystemBase{
     private CANSparkMax intakeMotor1;
     private CANSparkMax intakeMotor2;
     public double intakeWheelRatio = 2.0/3.0; // ratio of smaller wheel to bigger wheel
-    //public Boolean notePresent;
     public DigitalInput notePresentSwitch = new DigitalInput(0);
 
     public IntakeSubsystem(){
@@ -35,30 +34,6 @@ public class IntakeSubsystem extends SubsystemBase{
     public void periodic(){
         SmartDashboard.putBoolean("Note Present Value", getNoteStatus());
     }
-
-
-    //// TODO: I don't think we were using these, but if intake doesn't work fix it 
-    // public void collectNote(double speed){
-    //     if(notePresentSwitch.get()){
-    //         intakeMotor1.set(speed);
-    //         intakeMotor2.set(speed*intakeWheelRatio);
-    //     }
-    //     else{
-    //         intakeMotor1.set(0.0);
-    //         intakeMotor2.set(0.0);
-    //     }
-    // }
-
-    // public void dispenseNote(double speed){
-    //     if(notePresentSwitch.get()){
-    //         intakeMotor1.set(speed);
-    //         intakeMotor2.set(speed*intakeWheelRatio);
-    //     }
-    //     else{
-    //         intakeMotor1.set(0.0);
-    //         intakeMotor2.set(0.0);
-    //     }
-    // }
 
     public boolean getNoteStatus() {
         return notePresentSwitch.get();

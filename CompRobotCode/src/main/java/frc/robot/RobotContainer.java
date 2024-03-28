@@ -144,8 +144,7 @@ public class RobotContainer {
     // autoChooser.setDefaultOption("Launch and Drive", launchAndDriveAuto);
     // autoChooser.setDefaultOption("Do Nothing", null);
 
-    
-    //TODO Determine which
+    //TODO Confirm directions align with what we expect
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
                                                                    () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
                                                                                                 OperatorConstants.LEFT_Y_DEADBAND),
@@ -211,8 +210,6 @@ public class RobotContainer {
     //                           ));
     //  new JoystickButton(driverXbox, 3).whileTrue(new RepeatCommand(new InstantCommand(drivebase::lock, drivebase)));
 
-    ////Old mapping, TODO re-teach controls 
-    //driverXbox.rightBumper().onTrue(new InstantCommand(drivebase::zeroGyro));
     driverXbox.leftBumper().onTrue(new InstantCommand(drivebase::zeroGyro));    
     driverXbox.rightTrigger().whileTrue(climbExtend);
     driverXbox.leftTrigger().whileTrue(climbRetract);
@@ -228,15 +225,6 @@ public class RobotContainer {
     operatorXbox.rightBumper().whileTrue(intakeAmp);
     operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
 
-
-    
-    // driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-    // driverXbox.b().whileTrue(
-    //     Commands.deferredProxy(() -> drivebase.driveToPose(
-    //                                new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-    //                           ));
-    // driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-
   }
 
   /**
@@ -245,12 +233,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    //return oneNoteAuto;
-    return launchAuto;
+    // return launchAuto;
     //return waitAndLaunchAuto;
-    
-    //return launchAndDriveAuto;
+    return launchAndDriveAuto;
   }
 
 }
