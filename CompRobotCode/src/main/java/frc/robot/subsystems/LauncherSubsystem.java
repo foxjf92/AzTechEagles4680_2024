@@ -15,11 +15,11 @@ public class LauncherSubsystem extends SubsystemBase {
    
     public LauncherSubsystem(){
         launcherMotor1 = new CANSparkMax(12, CANSparkLowLevel.MotorType.kBrushless);
-        launcherMotor1.setSmartCurrentLimit(60);
+        launcherMotor1.setSmartCurrentLimit(80);
         launcherMotor1.setIdleMode(IdleMode.kBrake);
 
         launcherMotor2 = new CANSparkMax(13, CANSparkLowLevel.MotorType.kBrushless);
-        launcherMotor2.setSmartCurrentLimit(60);
+        launcherMotor2.setSmartCurrentLimit(80);
         launcherMotor2.setIdleMode(IdleMode.kBrake);
     }
 

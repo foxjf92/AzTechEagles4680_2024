@@ -60,8 +60,8 @@ public final class Constants
     public static final double intakePosition = 0.52; 
 
     //Push-feed constants
-    // public static final double stagePosition = null; //TODO position to stage Note before push
-    // public static final double pushPosition = null; //TODO position to stage Note to push
+    // public static final double stagePosition = null; //position to stage Note before push
+    // public static final double pushPosition = null; //position to stage Note to push
   }
 
 }

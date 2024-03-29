@@ -79,16 +79,13 @@ public class RobotContainer {
 
   //Auton Commands
   Command autoDriveCommand = new AbsoluteDriveAdv(drivebase,
-                                                                   () -> -MathUtil.applyDeadband(autoXV,
-                                                                                                OperatorConstants.LEFT_Y_DEADBAND),
-                                                                   () -> -MathUtil.applyDeadband(autoYV,
-                                                                                                OperatorConstants.LEFT_X_DEADBAND),
-                                                                   () -> -MathUtil.applyDeadband(autoRotation,
-                                                                                                OperatorConstants.RIGHT_X_DEADBAND),
-                                                                   driverXbox.getHID()::getYButtonPressed,
-                                                                   driverXbox.getHID()::getAButtonPressed,
-                                                                   driverXbox.getHID()::getXButtonPressed,
-                                                                   driverXbox.getHID()::getBButtonPressed);
+                                                                  () -> -autoXV,
+                                                                  () -> -autoYV,
+                                                                  () -> -autoRotation,
+                                                                  () -> false,
+                                                                  () -> false,
+                                                                  () -> false,
+                                                                  () -> false);
   
   // SequentialCommandGroup oneNoteAuto = new SequentialCommandGroup(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch))
   //   .withTimeout(4)
@@ -113,23 +110,38 @@ public class RobotContainer {
                                                                   () -> -autoXV,
                                                                   () -> -autoYV,
                                                                   () -> -autoRotation,
-                                                                   driverXbox.getHID()::getYButtonPressed,
-                                                                   driverXbox.getHID()::getAButtonPressed,
-                                                                   driverXbox.getHID()::getXButtonPressed,
-                                                                   driverXbox.getHID()::getBButtonPressed))
-    
-    // .andThen(new AbsoluteDriveAdv(drivebase,
-    //                                                                () -> -MathUtil.applyDeadband(autoXV,
-    //                                                                                             OperatorConstants.LEFT_Y_DEADBAND),
-    //                                                                () -> -MathUtil.applyDeadband(autoYV,
-    //                                                                                             OperatorConstants.LEFT_X_DEADBAND),
-    //                                                                () -> -MathUtil.applyDeadband(autoRotation,
-    //                                                                                             OperatorConstants.RIGHT_X_DEADBAND),
-    //                                                                driverXbox.getHID()::getYButtonPressed,
-    //                                                                driverXbox.getHID()::getAButtonPressed,
-    //                                                                driverXbox.getHID()::getXButtonPressed,
-    //                                                                driverXbox.getHID()::getBButtonPressed))
-      .withTimeout(7.0);
+                                                                  () -> false,
+                                                                  () -> false,
+                                                                  () -> false,
+                                                                  () -> false));
+
+    Command launchAndDriveAndCollectAndLaunchAuto = new LaunchGamepieceCommand(launcher, -1.0)
+    .alongWith(new WaitCommand(1.25)
+    .andThen(new SpinIntakeCommand(intake, -1.0)))
+    .withTimeout(3.0)
+    .andThen(new AbsoluteDriveAdv(drivebase,
+                                                                  () -> -autoXV,
+                                                                  () -> -autoYV,
+                                                                  () -> -autoRotation,
+                                                                  () -> false,
+                                                                  () -> false,
+                                                                  () -> false,
+                                                                  () -> false)
+      .raceWith(new MoveArmCommand(arm, 1))
+      .raceWith(new SpinIntakeCommand(intake, -0.3)))
+    .andThen(new AbsoluteDriveAdv(drivebase,
+                                                                  () -> autoXV,
+                                                                  () -> -autoYV,
+                                                                  () -> -autoRotation,
+                                                                  () -> false,
+                                                                  () -> false,
+                                                                  () -> false,
+                                                                  () -> false))
+    .withTimeout(7.0)
+    .andThen(new LaunchGamepieceCommand(launcher, -1.0)
+    .alongWith(new WaitCommand(1.25)
+    .andThen(new SpinIntakeCommand(intake, -1.0))))
+    .withTimeout(10);
   
 
 
@@ -144,14 +156,13 @@ public class RobotContainer {
     // autoChooser.setDefaultOption("Launch and Drive", launchAndDriveAuto);
     // autoChooser.setDefaultOption("Do Nothing", null);
 
-    //TODO Confirm directions align with what we expect
     AbsoluteDriveAdv closedAbsoluteDriveAdv = new AbsoluteDriveAdv(drivebase,
                                                                    () -> -MathUtil.applyDeadband(driverXbox.getLeftY(),
                                                                                                 OperatorConstants.LEFT_Y_DEADBAND),
                                                                    () -> -MathUtil.applyDeadband(driverXbox.getLeftX(),
                                                                                                 OperatorConstants.LEFT_X_DEADBAND),
                                                                    () -> MathUtil.applyDeadband(driverXbox.getRightX(),
-                                                                                                OperatorConstants.RIGHT_X_DEADBAND),//TODO confirm Arturo doesn't want rotation inverted
+                                                                                                OperatorConstants.RIGHT_X_DEADBAND),
                                                                    driverXbox.getHID()::getYButtonPressed,
                                                                    driverXbox.getHID()::getAButtonPressed,
                                                                    driverXbox.getHID()::getXButtonPressed,
@@ -220,7 +231,10 @@ public class RobotContainer {
     operatorXbox.y().onTrue(armLaunch);
     operatorXbox.leftBumper().whileTrue(intakeCollect);
     //// Try the below logic to automate collection
-    //operatorXbox.leftBumper().whileTrue(intakeCollect.raceWith(armIntakeHold).andThen(intake.notePresentSwitch.get() ? armIntakeHold : armIntakeToLaunch));
+    // operatorXbox.leftBumper().whileTrue(
+    //   new MoveArmCommand(arm, 1)
+    //   .raceWith(armIntakeHold)
+    //   .andThen(intake.notePresentSwitch.get() ? new MoveArmCommand(arm, 1) : new MoveArmCommand(arm, 3)));
     
     operatorXbox.rightBumper().whileTrue(intakeAmp);
     operatorXbox.rightTrigger().whileTrue(launchGamepiece.alongWith(launchDelay.andThen(intakeLaunch)));
@@ -236,6 +250,7 @@ public class RobotContainer {
     // return launchAuto;
     //return waitAndLaunchAuto;
     return launchAndDriveAuto;
+    // return launchAndDriveAndCollectAuto;
   }
 
 }
