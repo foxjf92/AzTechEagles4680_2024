@@ -54,7 +54,8 @@ public final class Constants
   public static class ArmConstants
   {
     //Through bore encoder values
-    public static final double launchPosition = 0.304;  // TODO confirm this is best spot for launching
+    //public static final double launchPosition = 0.304;  // TODO confirm this is best spot for launching
+    public static final double launchPosition = 0.300;  // TODO confirm this is best spot for launching
     public static final double ampPosition = 0.329;     // adjusted to angle down a little
     public static final double intakePosition = 0.52; 
 

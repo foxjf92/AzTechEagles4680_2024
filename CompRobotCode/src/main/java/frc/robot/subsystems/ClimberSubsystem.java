@@ -19,8 +19,8 @@ public class ClimberSubsystem extends SubsystemBase {
         climberMotor.setIdleMode(IdleMode.kBrake);
         climberMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
         climberMotor.enableSoftLimit(SoftLimitDirection.kReverse, true);
-        climberMotor.setSoftLimit(SoftLimitDirection.kForward, 210);
-        climberMotor.setSoftLimit(SoftLimitDirection.kReverse, -300);
+        climberMotor.setSoftLimit(SoftLimitDirection.kForward, 200);
+        climberMotor.setSoftLimit(SoftLimitDirection.kReverse, -310);
 
        climberEncoder = climberMotor.getEncoder(); 
 
