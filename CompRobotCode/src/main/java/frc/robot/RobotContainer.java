@@ -93,8 +93,8 @@ public class RobotContainer {
 
   Command launchAuto = new LaunchGamepieceCommand(launcher, -1.0)
     .alongWith(new WaitCommand(1.25)
-    .andThen(new SpinIntakeCommand(intake, -1.0)))
-    .withTimeout(3);
+      .andThen(new SpinIntakeCommand(intake, -1.0)))
+      .withTimeout(3);
   
   Command waitAndLaunchAuto = new WaitCommand(10.0)
     .andThen(new LaunchGamepieceCommand(launcher, -1.0))
@@ -105,30 +105,7 @@ public class RobotContainer {
     Command launchAndDriveAuto = new LaunchGamepieceCommand(launcher, -1.0)
     .alongWith(new WaitCommand(1.25)
     .andThen(new SpinIntakeCommand(intake, -1.0)))
-    .withTimeout(3.0)
-    .andThen(new AbsoluteDriveAdv(drivebase,
-                                                                  () -> -autoXV,
-                                                                  () -> -autoYV,
-                                                                  () -> -autoRotation,
-                                                                  () -> false,
-                                                                  () -> false,
-                                                                  () -> false,
-                                                                  () -> false));
-
-    Command launchAndDriveAndCollectAndLaunchAuto = new LaunchGamepieceCommand(launcher, -1.0)
-    .alongWith(new WaitCommand(1.25)
-    .andThen(new SpinIntakeCommand(intake, -1.0)))
-    .withTimeout(3.0)
-    .andThen(new AbsoluteDriveAdv(drivebase,
-                                                                  () -> -autoXV,
-                                                                  () -> -autoYV,
-                                                                  () -> -autoRotation,
-                                                                  () -> false,
-                                                                  () -> false,
-                                                                  () -> false,
-                                                                  () -> false)
-      .raceWith(new MoveArmCommand(arm, 1))
-      .raceWith(new SpinIntakeCommand(intake, -0.3)))
+    .withTimeout(2)
     .andThen(new AbsoluteDriveAdv(drivebase,
                                                                   () -> autoXV,
                                                                   () -> -autoYV,
@@ -136,13 +113,50 @@ public class RobotContainer {
                                                                   () -> false,
                                                                   () -> false,
                                                                   () -> false,
-                                                                  () -> false))
-    .withTimeout(7.0)
+                                                                  () -> false)
+      .alongWith(new LaunchGamepieceCommand(launcher, 0)
+      .alongWith(new SpinIntakeCommand(intake, 0))))
+      .withTimeout(5);
+
+    Command launchAndDriveAndCollectAndLaunchAuto = new LaunchGamepieceCommand(launcher, -1.0)
+      .alongWith(new MoveArmCommand(arm, 3))
+      .alongWith(new WaitCommand(1.25)
+        .andThen(new SpinIntakeCommand(intake, -1.0)))
+        .withTimeout(3)
+      .andThen(new AbsoluteDriveAdv(drivebase,
+                                                                  () -> autoXV,
+                                                                  () -> -autoYV,
+                                                                  () -> -autoRotation,
+                                                                  () -> false,
+                                                                  () -> false,
+                                                                  () -> false,
+                                                                  () -> false)
+        .alongWith(new LaunchGamepieceCommand(launcher, 0))
+        .alongWith(new MoveArmCommand(arm, 1))
+        .raceWith(new IntakeCollectCommand(intake, -0.3)))
+    .andThen(new AbsoluteDriveAdv(drivebase,
+                                                                  () -> -autoXV,
+                                                                  () -> -autoYV,
+                                                                   () -> -autoRotation,
+                                                                  () -> false,
+                                                                  () -> false,
+                                                                  () -> false,
+                                                                  () -> false)
+      .alongWith(new MoveArmCommand(arm, 3)))                                                       
+      .withTimeout(9.0)
     .andThen(new LaunchGamepieceCommand(launcher, -1.0)
-    .alongWith(new WaitCommand(1.25)
-    .andThen(new SpinIntakeCommand(intake, -1.0))))
-    .withTimeout(10);
-  
+      .alongWith(new AbsoluteDriveAdv(drivebase,
+                                                                  () -> 0,
+                                                                  () -> -autoYV,
+                                                                   () -> -autoRotation,
+                                                                  () -> false,
+                                                                  () -> false,
+                                                                  () -> false,
+                                                                  () -> false))
+      .alongWith(new MoveArmCommand(arm, 3))
+      .alongWith(new WaitCommand(1.25)
+        .andThen(new SpinIntakeCommand(intake, -1.0)))
+      .withTimeout(11)); 
 
 
 
@@ -247,10 +261,12 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    // return null;
     // return launchAuto;
-    //return waitAndLaunchAuto;
-    return launchAndDriveAuto;
-    // return launchAndDriveAndCollectAuto;
+    // return waitAndLaunchAuto;
+    // return launchAndDriveAuto;
+    // return launchAndDriveSideAuto;
+    return launchAndDriveAndCollectAndLaunchAuto;
   }
 
 }

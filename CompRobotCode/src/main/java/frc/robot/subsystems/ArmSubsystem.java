@@ -10,15 +10,15 @@ import frc.robot.commands.Teleop.MoveArmCommand;
 
 public class ArmSubsystem extends SubsystemBase {
     
-    private CANSparkMax armMotor;
+    public static CANSparkMax armMotor;
     public DutyCycleEncoder armEncoder;
     public double armPosition;
     
     public ArmSubsystem(){
         armMotor = new CANSparkMax (9, CANSparkLowLevel.MotorType.kBrushless);
         armMotor.setSmartCurrentLimit(40);
-        //armMotor.setIdleMode(IdleMode.kBrake);
-        armMotor.setIdleMode(IdleMode.kCoast);
+        armMotor.setIdleMode(IdleMode.kBrake);
+        // armMotor.setIdleMode(IdleMode.kCoast);
         
         armEncoder = new DutyCycleEncoder(9);
         
@@ -42,6 +42,10 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void moveArm(double armSpeed){
         armMotor.set(armSpeed);
+    }
+
+    public void setArmBrake(){
+        armMotor.setIdleMode(IdleMode.kBrake);
     }
 
 }
